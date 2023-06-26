@@ -6,6 +6,10 @@ import Footer from './components/common/Footer';
 
 // main
 import Visual from './components/main/Visual';
+import Pics from './components/main/Pics';
+import News from './components/main/News';
+import Vids from './components/main/Vids';
+import Banner from './components/main/Banner';
 
 // sub
 import Community from './components/sub/Community';
@@ -20,8 +24,13 @@ function App() {
 		<>
 			<Header />
 
-			<Route path='/'>
+			<Route exact path='/'>
 				<Visual />
+
+				<Pics />
+				<News />
+				<Vids />
+				<Banner />
 			</Route>
 
 			<Route path='/department'>

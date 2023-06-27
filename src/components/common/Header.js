@@ -5,7 +5,7 @@ function Header() {
 	return (
 		<header>
 			<h1>
-				<Link to='/'>logo</Link>
+				<Link to='/'>LOGO</Link>
 			</h1>
 
 			<ul id='gnb'>

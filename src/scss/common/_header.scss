@@ -1,6 +1,7 @@
 header {
 	width: 100%;
-	background: #222;
+	background: #fff;
+	border-bottom: 1px solid #ddd;
 	padding: 20px 10vw;
 	display: flex;
 	justify-content: space-between;
@@ -10,7 +11,7 @@ header {
 		a {
 			font: bold 24px/1;
 			font-family: 'Gill Sans';
-			color: #fff;
+			color: #333;
 		}
 	}
 
@@ -20,10 +21,12 @@ header {
 		li {
 			a {
 				font: 15px/1 'Gill Sans';
-				color: #ddd;
+				color: #777;
+				text-transform: uppercase;
 
 				&.on {
-					color: aqua;
+					color: #000;
+					font-weight: 600;
 				}
 			}
 		}

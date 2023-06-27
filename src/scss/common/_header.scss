@@ -30,6 +30,11 @@ header {
 			}
 		}
 	}
+	.fa-bars {
+		color: #333;
+		font-size: 20px;
+		display: none;
+	}
 }
 
 header.main {
@@ -52,4 +57,39 @@ header.main {
 			}
 		}
 	}
+
+	.fa-bars {
+		color: white;
+	}
+}
+
+@media screen and (max-width: $tablet) {
+	header {
+		width: 100%;
+		background: #fff;
+		border-bottom: 1px solid #ddd;
+		padding: 20px 10vw;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		h1 {
+			a {
+				font: bold 24px/1 'arial';
+				color: #333;
+			}
+		}
+
+		#gnb {
+			display: none;
+		}
+
+		.fa-bars {
+			color: #333;
+			font-size: 20px;
+			display: inline-block;
+		}
+	}
+}
+@media screen and (max-width: $mobile) {
 }

@@ -1,3 +1,5 @@
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, NavLink } from 'react-router-dom';
 
 function Header({ type }) {
@@ -41,6 +43,8 @@ function Header({ type }) {
 					</NavLink>
 				</li>
 			</ul>
+
+			<FontAwesomeIcon icon={faBars} />
 		</header>
 	);
 }

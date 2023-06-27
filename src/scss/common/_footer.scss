@@ -18,3 +18,12 @@ footer {
 		letter-spacing: 1px;
 	}
 }
+
+@media screen and (max-width: $mobile) {
+	footer {
+		h1 {
+			font-size: 18px;
+			margin-bottom: 20px;
+		}
+	}
+}

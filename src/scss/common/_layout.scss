@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Open+Sans:wght@300;400;500;600&display=swap');
+
+.content {
+	figure {
+		width: 100%;
+		height: 300px;
+		background: gray;
+	}
+	> .inner {
+		padding: 100px 10vw;
+		min-height: 600px;
+
+		h1 {
+			font: 300 70px/1 'Open Sans';
+			color: #333;
+			margin-bottom: 30px;
+
+			&::before {
+				display: block;
+				width: 100px;
+				height: 1px;
+				background: #333;
+				margin-bottom: 30px;
+				content: '';
+			}
+		}
+	}
+}

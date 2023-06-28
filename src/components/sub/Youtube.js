@@ -1,10 +1,11 @@
 import Layout from '../common/Layout';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Modal from '../common/Modal';
 
 function Youtube() {
-	const [Video, setVideo] = useState([]);
+	const modal = useRef(null);
+	const [Vids, setVids] = useState([]);
 	useEffect(() => {
 		const key = 'AIzaSyC4TpEbx2d9lOtjiVQIg3b6wA6ZKKrDL7c';
 		const list = 'PLQZTVbf9_qAn_Nwrz2maZG64AaEBcFZfb';
@@ -14,35 +15,33 @@ function Youtube() {
 		// useEffect 바깥에 async await으로 빼고, 안에는 호출만 하도록 변경해보기.
 		axios.get(`${url}`).then((data) => {
 			console.log(data.data.items);
-			setVideo(data.data.items);
+			setVids(data.data.items);
 		});
 	}, []);
 	return (
 		<>
 			<Layout name={'Youtube'}>
-				{Video.map((video, idx) => {
+				{Vids.map((vid, idx) => {
 					return (
 						<article key={idx}>
-							<div className='pic'>
-								<img src={video.snippet.thumbnails.standard.url} alt={video.snippet.title} />
-							</div>
-							<h2>
-								{video.snippet.title.length > 50 ? video.snippet.title.substr(0, 50) + '...' : video.snippet.title}
-							</h2>
+							<h2>{vid.snippet.title.length > 50 ? vid.snippet.title.substr(0, 50) + '...' : vid.snippet.title}</h2>
 							<div className='txt'>
 								<p>
-									{video.snippet.description.length > 200
-										? video.snippet.description.substr(0, 200) + '...'
-										: video.snippet.description}
+									{vid.snippet.description.length > 200
+										? vid.snippet.description.substr(0, 200) + '...'
+										: vid.snippet.description}
 								</p>
-								<span>{video.snippet.publishedAt.split('T')[0].split('-').join('.')}</span>
+								<span>{vid.snippet.publishedAt.split('T')[0].split('-').join('.')}</span>
+							</div>
+							<div className='pic' onClick={() => modal.current.open()}>
+								{/* {current: aside.modal} */}
+								<img src={vid.snippet.thumbnails.standard.url} alt={vid.snippet.title} />
 							</div>
 						</article>
 					);
 				})}
 			</Layout>
-
-			<Modal />
+			<Modal ref={modal} />
 		</>
 	);
 }

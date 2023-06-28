@@ -5,11 +5,7 @@ import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 
 // main
-import Visual from './components/main/Visual';
-import Pics from './components/main/Pics';
-import News from './components/main/News';
-import Vids from './components/main/Vids';
-import Banner from './components/main/Banner';
+import Main from './components/main/Main';
 
 // sub
 import Community from './components/sub/Community';
@@ -26,38 +22,29 @@ function App() {
 		<>
 			{/* Switch는 더 먼저나온 라우터 선택 */}
 			<Switch>
-				<Route exact path='/'>
-					{/* 메인 전용 라우터에는 main 문자값을 전달 */}
-					<Header type={'main'} />
-					<Visual />
-					<Pics />
-					<News />
-					<Vids />
-					<Banner />
-				</Route>
+				<Route exact path='/' component={Main} />
+
+				{/* 기본 형태 ( 특정 문자값을 전달해야하는 )
 				<Route path='/'>
-					{/* 메인 전용 라우터에는 sub 문자값을 전달 */}
 					<Header type={'sub'} />
 				</Route>
+				 */}
+
+				<Route path='/' render={() => <Header type={'sub'} />} />
 			</Switch>
-			<Route path='/department'>
-				<Department />
-			</Route>
+
+			{/* 기본 형태
 			<Route path='/community'>
 				<Community />
-			</Route>
-			<Route path='/gallery'>
-				<Gallery />
-			</Route>
-			<Route path='/youtube'>
-				<Youtube />
-			</Route>
-			<Route path='/contact'>
-				<Contact />
-			</Route>
-			<Route path='/member'>
-				<Member />
-			</Route>
+			</Route> 
+			*/}
+
+			<Route path='/department' component={Department} />
+			<Route path='/community' component={Community} />
+			<Route path='/gallery' component={Gallery} />
+			<Route path='/youtube' component={Youtube} />
+			<Route path='/contact' component={Contact} />
+			<Route path='/member' component={Member} />
 			<Footer />
 		</>
 	);

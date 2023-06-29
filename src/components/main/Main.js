@@ -7,8 +7,6 @@ import Vids from './Vids';
 import Banner from './Banner';
 import Btns from './Btns';
 
-import { useRef, useEffect } from 'react';
-
 function Main() {
 	return (
 		<main>

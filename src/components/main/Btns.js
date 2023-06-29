@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import Anime from '../../asset/anime';
 
-function Btns() {
+function Btns({ setScrolled }) {
 	const btnRef = useRef(null);
 	const pos = useRef([]);
 
@@ -16,10 +16,12 @@ function Btns() {
 	};
 
 	const activation = () => {
+		//스크롤
 		const base = -window.innerHeight / 3;
 		const scroll = window.scrollY;
 		const btns = btnRef.current.children; // li들
 		const boxs = btnRef.current.parentElement.querySelectorAll('.myScroll');
+		setScrolled(scroll);
 
 		pos.current.forEach((pos, idx) => {
 			if (scroll >= pos + base) {

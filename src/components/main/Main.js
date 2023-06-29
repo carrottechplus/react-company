@@ -9,6 +9,7 @@ import Btns from './Btns';
 
 function Main() {
 	const [Scrolled, setScrolled] = useState(0);
+	const [Pos, setPos] = useState([]);
 
 	return (
 		<main>
@@ -22,10 +23,12 @@ function Main() {
 			<Header type={'main'} />
 			<Visual />
 			<News />
-			<Pics Scrolled={Scrolled} />
+
+			{/* pics 컴포넌트가 활성화되는 순간부터 Scrolled값을 pics의 제목 스타일과 연동 */}
+			<Pics Scrolled={Scrolled} Pos={Pos[2]} />
 			<Vids />
 			<Banner />
-			<Btns setScrolled={setScrolled} />
+			<Btns setScrolled={setScrolled} setPos={setPos} />
 		</main>
 	);
 }

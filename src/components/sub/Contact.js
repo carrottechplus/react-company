@@ -47,6 +47,10 @@ function Contact() {
 		const mapInstance = new kakao.maps.Map(container.current, option);
 
 		marker.setMap(mapInstance);
+
+		mapInstance.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
+
+		mapInstance.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
 		setLocation(mapInstance);
 	}, [Index]);
 
@@ -63,7 +67,7 @@ function Contact() {
 			<ul className='branch'>
 				{info.map((el, idx) => {
 					return (
-						<li key={idx} onClick={() => setIndex(idx)}>
+						<li key={idx} className={idx === Index ? 'on' : ''} onClick={() => setIndex(idx)}>
 							{el.title}
 						</li>
 					);

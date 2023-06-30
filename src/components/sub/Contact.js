@@ -1,11 +1,13 @@
 import Layout from '../common/Layout';
 import { useRef, useEffect, useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 function Contact() {
 	const container = useRef(null);
 	const [Traffic, setTraffic] = useState(false);
 	const [Location, setLocation] = useState(null);
 	const [Index, setIndex] = useState(0);
+	const form = useRef(null);
 
 	const { kakao } = window;
 	const info = [
@@ -43,16 +45,37 @@ function Contact() {
 	const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
 	const marker = new kakao.maps.Marker({ position: option.center, image: markerImage });
 
+	const sendEmail = (e) => {
+		e.preventDefault();
+
+		emailjs.sendForm('service_n8o6gw3', 'template_wcsi2oh', form.current, '3qmq3SKmOEg8rXy8d').then(
+			(result) => {
+				console.log(result.text);
+			},
+			(error) => {
+				console.log(error.text);
+			}
+		);
+	};
+
 	useEffect(() => {
 		container.current.innerHTML = '';
 		const mapInstance = new kakao.maps.Map(container.current, option);
-
 		marker.setMap(mapInstance);
 
 		mapInstance.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
-
 		mapInstance.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
 		setLocation(mapInstance);
+
+		const setCenter = () => {
+			mapInstance.panTo(info[Index].latlng);
+		};
+
+		window.addEventListener('resize', setCenter);
+		return () => {
+			//unmount 되었을때
+			window.removeEventListener('resize', setCenter);
+		};
 	}, [Index]);
 
 	useEffect(() => {
@@ -74,6 +97,17 @@ function Contact() {
 					);
 				})}
 			</ul>
+			<div id='formBox'>
+				<form ref={form} onSubmit={sendEmail}>
+					<label>Name</label>
+					<input type='text' name='user_name' />
+					<label>Email</label>
+					<input type='email' name='user_email' />
+					<label>Message</label>
+					<textarea name='message' />
+					<input type='submit' value='Send' />
+				</form>
+			</div>
 		</Layout>
 	);
 }

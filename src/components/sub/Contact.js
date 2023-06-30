@@ -4,10 +4,14 @@ import emailjs from '@emailjs/browser';
 
 function Contact() {
 	const container = useRef(null);
+	const form = useRef(null);
+	const inputName = useRef(null);
+	const inputEmail = useRef(null);
+	const inputMsg = useRef(null);
 	const [Traffic, setTraffic] = useState(false);
 	const [Location, setLocation] = useState(null);
 	const [Index, setIndex] = useState(0);
-	const form = useRef(null);
+	const [Success, setSuccess] = useState(false);
 
 	const { kakao } = window;
 	const info = [
@@ -51,9 +55,14 @@ function Contact() {
 		emailjs.sendForm('service_n8o6gw3', 'template_wcsi2oh', form.current, '3qmq3SKmOEg8rXy8d').then(
 			(result) => {
 				console.log(result.text);
+				setSuccess(true);
+				inputName.value = '';
+				inputEmail.value = '';
+				inputMsg.value = '';
 			},
 			(error) => {
 				console.log(error.text);
+				setSuccess(false);
 			}
 		);
 	};
@@ -100,13 +109,15 @@ function Contact() {
 			<div id='formBox'>
 				<form ref={form} onSubmit={sendEmail}>
 					<label>Name</label>
-					<input type='text' name='user_name' />
+					<input type='text' name='user_name' ref={inputName} />
 					<label>Email</label>
-					<input type='email' name='user_email' />
+					<input type='email' name='user_email' ref={inputEmail} />
 					<label>Message</label>
 					<textarea name='message' />
-					<input type='submit' value='Send' />
+					<input type='submit' value='Send' ref={inputMsg} />
 				</form>
+
+				{Success && <p>메일이 성공적으로 발송되었습니다.</p>}
 			</div>
 		</Layout>
 	);

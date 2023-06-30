@@ -1,45 +1,74 @@
 import Layout from '../common/Layout';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 function Contact() {
 	const container = useRef(null);
 	const [Traffic, setTraffic] = useState(false);
+	const [Location, setLocation] = useState(null);
+	const [Index, setIndex] = useState(0);
 
-	const { kakao } = window; // 이 구문이 없으면 윈도우 객체의 카카오맵 api를 못불러옴. 비구조할당으로 직접 뽑아와야함. 윈도우 객체에서 직접 kakao 상위 객체값을 뽑아옴.
+	const { kakao } = window;
+	const info = [
+		{
+			title: '삼성역 코엑스',
+			latlng: new kakao.maps.LatLng(37.51100661425726, 127.06162026853143),
+			imgSrc: `${process.env.PUBLIC_URL}/img/marker1.png`,
+			imgSize: new kakao.maps.Size(232, 99),
+			imgPos: { offset: new kakao.maps.Point(116, 99) },
+		},
+		{
+			title: '넥슨 본사',
+			latlng: new kakao.maps.LatLng(37.40211707077346, 127.10344953763003),
+			imgSrc: `${process.env.PUBLIC_URL}/img/marker2.png`,
+			imgSize: new kakao.maps.Size(232, 99),
+			imgPos: { offset: new kakao.maps.Point(116, 99) },
+		},
+		{
+			title: '서울 시청',
+			latlng: new kakao.maps.LatLng(37.5662952, 126.9779451),
+			imgSrc: `${process.env.PUBLIC_URL}/img/marker3.png`,
+			imgSize: new kakao.maps.Size(232, 99),
+			imgPos: { offset: new kakao.maps.Point(116, 99) },
+		},
+	];
 	const option = {
-		center: new kakao.maps.LatLng(33.450701, 126.570667),
+		center: info[Index].latlng,
 		level: 3,
 	};
-	// const map = new kakao.maps.Map(container, option); //이구문만 있으면 ref부분 아직 알기 전이라 에러나므로 아래 useEffect 써줘야함.
+
+	//아래 5개 변수값들은 useEffect구문에서 인스턴스 생성할때만 필요한 정보값에 불과하므로 미리 읽히도록 useEffect바깥에 배치
+	const imgSrc = info[Index].imgSrc;
+	const imgSize = info[Index].imgSize;
+	const imgPos = info[Index].imgPos;
+	const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
+	const marker = new kakao.maps.Marker({ position: option.center, image: markerImage });
 
 	useEffect(() => {
-		// 인스턴스 호출구문은 컴포넌트 처음 마운트시 호출
 		const mapInstance = new kakao.maps.Map(container.current, option);
-		const imageSrc = `${process.env.PUBLIC_URL}/img/marker1.png`;
-		const imageSize = new kakao.maps.Size(232, 99);
-		const imagePos = { offset: new kakao.maps.Point(116, 99) };
-		const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imagePos);
-
-		// 마커를 생성합니다
-		const marker = new kakao.maps.Marker({
-			position: option.center,
-			image: markerImage,
-		});
 
 		marker.setMap(mapInstance);
+		setLocation(mapInstance);
+	}, [Index]);
 
+	useEffect(() => {
 		Traffic
-			? mapInstance.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC)
-			: mapInstance.removeOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
+			? Location?.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC)
+			: Location?.removeOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
 	}, [Traffic]);
 
 	return (
 		<Layout name={'Contact'}>
 			<div id='map' ref={container}></div>
-			<button type='button' className='btnToggle' onClick={() => setTraffic(!Traffic)}>
-				{' '}
-				{Traffic ? 'Traffic ON' : 'Traffic Off'}
-			</button>
+			<button onClick={() => setTraffic(!Traffic)}>{Traffic ? 'Traffic ON' : 'Traffic OFF'}</button>
+			<ul className='branch'>
+				{info.map((el, idx) => {
+					return (
+						<li key={idx} onClick={() => setIndex(idx)}>
+							{el.title}
+						</li>
+					);
+				})}
+			</ul>
 		</Layout>
 	);
 }

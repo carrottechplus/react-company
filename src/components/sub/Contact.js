@@ -56,9 +56,9 @@ function Contact() {
 			(result) => {
 				console.log(result.text);
 				setSuccess(true);
-				inputName.value = '';
-				inputEmail.value = '';
-				inputMsg.value = '';
+				inputName.current.value = '';
+				inputEmail.current.value = '';
+				inputMsg.current.value = '';
 			},
 			(error) => {
 				console.log(error.text);

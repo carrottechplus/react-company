@@ -10,6 +10,8 @@ function Member() {
 	};
 
 	const [Val, setVal] = useState(initVal);
+	const [Err, setErr] = useState({});
+	const [Submit, setSubmit] = useState(false);
 
 	const handleChange = (e) => {
 		//현재 입력하고 있는 input 요소의 name,vale값을 비구조할당으로 뽑아서 출력
@@ -21,20 +23,53 @@ function Member() {
 	};
 
 	const check = (value) => {
-		//인수로 현재 State 값을 전달받아서 인증 통과시 true, 실패시 false를 반환하는 로직
+		// 인수로 현재 State 값을 전달받아서 항목별로 에러메세지를 객체로 반환하는 함수
+		// 반횐되는 에러 메세지가 있으면 인증 실패
+		// 에러 메세지가 없으면 인증 성공
+		const errs = {};
+		const eng = /[a-zA-Z]/;
+		const num = /[0-9]/;
+		const spc = /[~!@#$%^&*()_+]/;
+
+		if (value.userId.length < 5) {
+			errs.userId = '아이디를 5글자 이상 입력하세요.';
+		}
+		if (value.pwd1.length < 5 || !eng.test(value.pwd1) || !num.test(value.pwd1) || !spc.test(value.pwd1)) {
+			errs.pwd1 = '비밀번호는 5글자 이상, 영문, 숫자, 특수문자를 모두 포함하세요.';
+		}
+		if (value.pwd1 !== value.pwd2 || !value.pwd2) {
+			errs.pwd2 = '두개의 비밀번호를 동일하게 입력하세요.';
+		}
+		if (value.email.length < 8 || !/@/.test(value.email)) {
+			errs.email = '이메일주소는 8글자 이상 @를 포함하세요.';
+		}
+		return errs;
 	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log('현재 state 값', Val);
+		// console.log('현재 state 값', Val);
 
-		//check가 true 값을 반환하면 인증통과 그렇지 않으면 인증 실패
+		// check가 반환하는 인증 메세지가 있으면 해당 메세지를 화면에 출력하고 전송 중지
+		// 그렇지않으면 인증 성공
 		console.log(check(Val));
+		setErr(check(Val));
+		setSubmit(true);
 	};
 
 	useEffect(() => {
-		console.log(Val);
-	}, [Val]);
+		// 에러 스테이트 안에 값이 없으면 통과 있으면 실패. 객체의 key값을 반복돌아서 확인
+
+		// 객체의 키 값을 배열로 반환한 다음 해당 배열의 갯수를 저장,
+		// len 값이 0 이면 Err 객체에 에러 메세지가 없으니 인증 통과 처리
+
+		const len = Object.keys(Err).length;
+		if (len === 0 && Submit) {
+			alert('모든 인증을 통과했습니다.');
+		}
+
+		console.log(len, 'len');
+	}, [Err]);
 
 	return (
 		<Layout name={'Member'}>

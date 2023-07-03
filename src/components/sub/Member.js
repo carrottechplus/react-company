@@ -7,6 +7,8 @@ function Member() {
 		pwd1: '',
 		pwd2: '',
 		email: '',
+		gender: false,
+		hobby: false,
 	};
 
 	const [Val, setVal] = useState(initVal);
@@ -25,6 +27,15 @@ function Member() {
 	const handleRadio = (e) => {
 		const { name, checked } = e.target;
 		setVal({ ...Val, [name]: checked });
+	};
+
+	const handleCheck = (e) => {
+		const { name } = e.target;
+		let isChecked = false;
+		const inpust = e.target.parentElement.querySelectorAll('input');
+		// 모든 체크박스를 반복 돌아서 하나라도 체크되어 있으면 반환
+		inpust.forEach((el) => el.checked && (isChecked = true));
+		setVal({ ...Val, [name]: isChecked });
 	};
 
 	const check = (value) => {
@@ -51,6 +62,9 @@ function Member() {
 		if (!value.gender) {
 			errs.gender = '성별을 체크해주세요.';
 		}
+		if (!value.hobby) {
+			errs.hobby = '취미를 1개 이상 체크해주세요.';
+		}
 		return errs;
 	};
 
@@ -75,8 +89,6 @@ function Member() {
 		if (len === 0 && Submit) {
 			alert('모든 인증을 통과했습니다.');
 		}
-
-		console.log(len, 'len');
 	}, [Err]);
 
 	return (
@@ -99,7 +111,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.userId}</p>
+									{Err.userId && <p>{Err.userId}</p>}
 								</td>
 							</tr>
 							<tr>
@@ -115,7 +127,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.pwd1}</p>
+									{Err.pwd1 && <p>{Err.pwd1}</p>}
 								</td>
 							</tr>
 							<tr>
@@ -131,7 +143,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.pwd2}</p>
+									{Err.pwd2 && <p>{Err.pwd2}</p>}
 								</td>
 							</tr>
 							<tr>
@@ -147,7 +159,7 @@ function Member() {
 										onChange={handleChange}
 									/>
 									<br />
-									<p>{Err.email}</p>
+									{Err.email && <p>{Err.email}</p>}
 								</td>
 							</tr>
 							<tr>
@@ -158,7 +170,24 @@ function Member() {
 									<label htmlFor='female'>Female</label>
 									<input type='radio' name='gender' id='female' onChange={handleRadio} />
 									<br />
-									<p>{Err.gender}</p>
+									{Err.gender && <p>{Err.gender}</p>}
+								</td>
+							</tr>
+							<tr>
+								<th scope='row'>Interests</th>
+								<td>
+									<label htmlFor='sports'>Sports</label>
+									<input type='checkbox' name='hobby' id='sports' onChange={handleCheck} />
+									<label htmlFor='cleaning'>Cleaning</label>
+									<input type='checkbox' name='hobby' id='cleaning' onChange={handleCheck} />
+									<label htmlFor='game'>Game</label>
+									<input type='checkbox' name='hobby' id='game' onChange={handleCheck} />
+									<label htmlFor='cooking'>Cooking</label>
+									<input type='checkbox' name='hobby' id='cooking' onChange={handleCheck} />
+									<label htmlFor='music'>Music</label>
+									<input type='checkbox' name='hobby' id='music' onChange={handleCheck} />
+									<br />
+									{Err.hobby && <p>{Err.hobby}</p>}
 								</td>
 							</tr>
 						</thead>

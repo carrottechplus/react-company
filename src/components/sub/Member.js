@@ -10,6 +10,7 @@ function Member() {
 		gender: false,
 		hobby: false,
 		edu: '',
+		comments: '',
 	};
 
 	const [Val, setVal] = useState(initVal);
@@ -33,9 +34,9 @@ function Member() {
 	const handleCheck = (e) => {
 		const { name } = e.target;
 		let isChecked = false;
-		const inpust = e.target.parentElement.querySelectorAll('input');
+		const inputs = e.target.parentElement.querySelectorAll('input');
 		// 모든 체크박스를 반복 돌아서 하나라도 체크되어 있으면 반환
-		inpust.forEach((el) => el.checked && (isChecked = true));
+		inputs.forEach((el) => el.checked && (isChecked = true));
 		setVal({ ...Val, [name]: isChecked });
 	};
 
@@ -84,6 +85,9 @@ function Member() {
 		}
 		if (value.edu === '') {
 			errs.edu = '최종학력을 선택하세요.';
+		}
+		if (value.comments.length < 10) {
+			errs.comments = '내용을 입력해주세요.';
 		}
 		return errs;
 	};
@@ -215,8 +219,26 @@ function Member() {
 										<option value='middle-school'>중학교 졸업</option>
 										<option value='high-school'>고등학교 졸업</option>
 										<option value='college'>대학교 졸업</option>
-										{Err.edu && <p>{Err.edu}</p>}
 									</select>
+									{Err.edu && <p>{Err.edu}</p>}
+								</td>
+							</tr>
+
+							<tr>
+								<th>
+									<label htmlFor='comments'>Leave Message</label>
+								</th>
+								<td>
+									<textarea
+										name='comments'
+										id='comments'
+										cols='30'
+										rows='3'
+										value={Val.comments}
+										onChange={handleChange}
+									></textarea>
+									<br />
+									{Err.comments && <p>{Err.comments}</p>}
 								</td>
 							</tr>
 						</thead>

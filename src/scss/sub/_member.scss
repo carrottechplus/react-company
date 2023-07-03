@@ -36,11 +36,14 @@
 				padding: 15px 30px;
 
 				input[type='text'],
-				input[type='password'] {
-					width: 40%;
+				input[type='password'],
+				select,
+				textarea {
+					width: 60%;
 					padding: 6px 10px;
 					border: 1px solid #aaa;
 					background: #eff8f8;
+					resize: none;
 				}
 
 				input[type='radio'],
@@ -50,9 +53,9 @@
 				}
 
 				p {
+					margin-top: 10px;
 					font-size: 12px;
 					font-family: sans-serif;
-					line-height: 1.8;
 					color: red;
 				}
 			}

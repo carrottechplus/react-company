@@ -9,6 +9,7 @@ function Member() {
 		email: '',
 		gender: false,
 		hobby: false,
+		edu: '',
 	};
 
 	const [Val, setVal] = useState(initVal);
@@ -38,6 +39,22 @@ function Member() {
 		setVal({ ...Val, [name]: isChecked });
 	};
 
+	const handleSelect = (e) => {
+		const { name, value } = e.target;
+		setVal({ ...Val, [name]: value });
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		// console.log('현재 state 값', Val);
+
+		// check가 반환하는 인증 메세지가 있으면 해당 메세지를 화면에 출력하고 전송 중지
+		// 그렇지않으면 인증 성공
+		console.log(check(Val));
+		setErr(check(Val));
+		setSubmit(true);
+	};
+
 	const check = (value) => {
 		// 인수로 현재 State 값을 전달받아서 항목별로 에러메세지를 객체로 반환하는 함수
 		// 반횐되는 에러 메세지가 있으면 인증 실패
@@ -65,18 +82,10 @@ function Member() {
 		if (!value.hobby) {
 			errs.hobby = '취미를 1개 이상 체크해주세요.';
 		}
+		if (value.edu === '') {
+			errs.edu = '최종학력을 선택하세요.';
+		}
 		return errs;
-	};
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		// console.log('현재 state 값', Val);
-
-		// check가 반환하는 인증 메세지가 있으면 해당 메세지를 화면에 출력하고 전송 중지
-		// 그렇지않으면 인증 성공
-		console.log(check(Val));
-		setErr(check(Val));
-		setSubmit(true);
 	};
 
 	useEffect(() => {
@@ -109,6 +118,7 @@ function Member() {
 										id='userId'
 										placeholder='아이디를 입력하세요'
 										onChange={handleChange}
+										value={Val.userId}
 									/>
 									<br />
 									{Err.userId && <p>{Err.userId}</p>}
@@ -125,6 +135,7 @@ function Member() {
 										id='pwd1'
 										placeholder='비밀번호를 입력하세요'
 										onChange={handleChange}
+										value={Val.pwd1}
 									/>
 									<br />
 									{Err.pwd1 && <p>{Err.pwd1}</p>}
@@ -141,6 +152,7 @@ function Member() {
 										id='pwd2'
 										placeholder='비밀번호를 재입력하세요'
 										onChange={handleChange}
+										value={Val.pwd2}
 									/>
 									<br />
 									{Err.pwd2 && <p>{Err.pwd2}</p>}
@@ -157,6 +169,7 @@ function Member() {
 										id='email'
 										placeholder='이메일 주소를 입력하세요'
 										onChange={handleChange}
+										value={Val.email}
 									/>
 									<br />
 									{Err.email && <p>{Err.email}</p>}
@@ -190,13 +203,35 @@ function Member() {
 									{Err.hobby && <p>{Err.hobby}</p>}
 								</td>
 							</tr>
+
+							<tr>
+								<th scope='row'>
+									<label htmlFor='edu'>Edu</label>
+								</th>
+								<td>
+									<select name='edu' id='edu' onChange={handleSelect}>
+										<option value=''>최종학력을 선택하세요</option>
+										<option value='elementary-school'>초등학교 졸업</option>
+										<option value='middle-school'>중학교 졸업</option>
+										<option value='high-school'>고등학교 졸업</option>
+										<option value='college'>대학교 졸업</option>
+										{Err.edu && <p>{Err.edu}</p>}
+									</select>
+								</td>
+							</tr>
 						</thead>
 
 						{/* form buttons */}
 						<tbody>
 							<tr>
 								<th colSpan='2'>
-									<input type='reset' value='Cancel' />
+									<input
+										type='reset'
+										value='Cancel'
+										onClick={() => {
+											setVal(initVal);
+										}}
+									/>
 									<input type='submit' value='Send' />
 								</th>
 							</tr>

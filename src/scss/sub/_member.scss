@@ -42,6 +42,19 @@
 					border: 1px solid #aaa;
 					background: #eff8f8;
 				}
+
+				input[type='radio'],
+				input[type='checkbox'] {
+					margin-right: 20px;
+					margin-left: 5px;
+				}
+
+				p {
+					font-size: 12px;
+					font-family: sans-serif;
+					line-height: 1.8;
+					color: red;
+				}
 			}
 		}
 	}

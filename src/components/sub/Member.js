@@ -22,6 +22,11 @@ function Member() {
 		setVal({ ...Val, [name]: value }); //변경함수 호출해서
 	};
 
+	const handleRadio = (e) => {
+		const { name, checked } = e.target;
+		setVal({ ...Val, [name]: checked });
+	};
+
 	const check = (value) => {
 		// 인수로 현재 State 값을 전달받아서 항목별로 에러메세지를 객체로 반환하는 함수
 		// 반횐되는 에러 메세지가 있으면 인증 실패
@@ -42,6 +47,9 @@ function Member() {
 		}
 		if (value.email.length < 8 || !/@/.test(value.email)) {
 			errs.email = '이메일주소는 8글자 이상 @를 포함하세요.';
+		}
+		if (!value.gender) {
+			errs.gender = '성별을 체크해주세요.';
 		}
 		return errs;
 	};
@@ -90,6 +98,8 @@ function Member() {
 										placeholder='아이디를 입력하세요'
 										onChange={handleChange}
 									/>
+									<br />
+									<p>{Err.userId}</p>
 								</td>
 							</tr>
 							<tr>
@@ -104,6 +114,8 @@ function Member() {
 										placeholder='비밀번호를 입력하세요'
 										onChange={handleChange}
 									/>
+									<br />
+									<p>{Err.pwd1}</p>
 								</td>
 							</tr>
 							<tr>
@@ -118,6 +130,8 @@ function Member() {
 										placeholder='비밀번호를 재입력하세요'
 										onChange={handleChange}
 									/>
+									<br />
+									<p>{Err.pwd2}</p>
 								</td>
 							</tr>
 							<tr>
@@ -132,6 +146,19 @@ function Member() {
 										placeholder='이메일 주소를 입력하세요'
 										onChange={handleChange}
 									/>
+									<br />
+									<p>{Err.email}</p>
+								</td>
+							</tr>
+							<tr>
+								<th scope='row'>Gender</th>
+								<td>
+									<label htmlFor='male'>Male</label>
+									<input type='radio' name='gender' id='male' onChange={handleRadio} />
+									<label htmlFor='female'>Female</label>
+									<input type='radio' name='gender' id='female' onChange={handleRadio} />
+									<br />
+									<p>{Err.gender}</p>
 								</td>
 							</tr>
 						</thead>

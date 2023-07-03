@@ -76,6 +76,8 @@ function Contact() {
 		mapInstance.addControl(new kakao.maps.ZoomControl(), kakao.maps.ControlPosition.RIGHT);
 		setLocation(mapInstance);
 
+		mapInstance.setZoomable(false);
+
 		const setCenter = () => {
 			mapInstance.panTo(info[Index].latlng);
 		};
@@ -96,7 +98,9 @@ function Contact() {
 	return (
 		<Layout name={'Contact'}>
 			<div id='map' ref={container}></div>
-			<button onClick={() => setTraffic(!Traffic)}>{Traffic ? 'Traffic ON' : 'Traffic OFF'}</button>
+			<button type='button' onClick={() => setTraffic(!Traffic)}>
+				{Traffic ? 'Traffic OFF' : 'Traffic ON'}
+			</button>
 			<ul className='branch'>
 				{info.map((el, idx) => {
 					return (

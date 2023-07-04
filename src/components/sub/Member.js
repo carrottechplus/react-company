@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Layout from '../common/Layout';
+import { useHistory } from 'react-router-dom';
 
 function Member() {
 	const initVal = {
@@ -16,6 +17,7 @@ function Member() {
 	const [Val, setVal] = useState(initVal);
 	const [Err, setErr] = useState({});
 	const [Submit, setSubmit] = useState(false);
+	const history = useHistory();
 
 	const handleChange = (e) => {
 		//현재 입력하고 있는 input 요소의 name,vale값을 비구조할당으로 뽑아서 출력
@@ -87,7 +89,7 @@ function Member() {
 			errs.edu = '최종학력을 선택하세요.';
 		}
 		if (value.comments.length < 10) {
-			errs.comments = '내용을 입력해주세요.';
+			errs.comments = '내용을 최소 10글자 이상 입력해주세요.';
 		}
 		return errs;
 	};
@@ -101,11 +103,20 @@ function Member() {
 		const len = Object.keys(Err).length;
 		if (len === 0 && Submit) {
 			alert('모든 인증을 통과했습니다.');
+			history.push('/');
 		}
 	}, [Err]);
 
 	return (
 		<Layout name={'Member'}>
+			<button
+				type='button'
+				onClick={() => {
+					history.goBack();
+				}}
+			>
+				뒤로가기
+			</button>
 			<form action='' onSubmit={handleSubmit}>
 				<fieldset>
 					<legend className='hidden'>회원가입 폼 양식</legend>

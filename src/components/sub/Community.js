@@ -34,6 +34,15 @@ function Community() {
 		);
 	};
 
+	const disableUpdate = (editIndex) => {
+		setPosts(
+			Posts.map((post, postIndex) => {
+				if (editIndex === postIndex) post.enableUpdate = false;
+				return post;
+			})
+		);
+	};
+
 	//post가 바뀔때마다
 	useEffect(() => {
 		console.log(Posts);
@@ -63,7 +72,21 @@ function Community() {
 							{post.enableUpdate ? (
 								// 수정모드
 								<>
-									<p> 수정 모드 </p>
+									<div className='txt'>
+										{/* 
+										onChange 이벤트로 제어하지 않는 input 요소의 value값은 defaultValue 속성으로 지정.
+										value - 리액트의 상태값에 관리되는 폼 요소,
+										defalutValue - 일반 돔에 의해 관리되는 폼 요소
+										 */}
+										<input type='text' defaultValue={post.title} />
+										<textarea defaultValue={post.content}></textarea>
+									</div>
+									<nav className='btnSet'>
+										<button type='button' onClick={() => disableUpdate(idx)}>
+											Cancel
+										</button>
+										<button type='button'>Update</button>
+									</nav>
 								</>
 							) : (
 								// 출력모드

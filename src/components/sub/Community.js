@@ -25,6 +25,15 @@ function Community() {
 		setPosts(Posts.filter((_, idx) => idx !== delIndex));
 	};
 
+	const enableUpdate = (editIndex) => {
+		setPosts(
+			Posts.map((post, postIndex) => {
+				if (editIndex === postIndex) post.enableUpdate = true;
+				return post;
+			})
+		);
+	};
+
 	//post가 바뀔때마다
 	useEffect(() => {
 		console.log(Posts);
@@ -37,23 +46,42 @@ function Community() {
 				<br />
 				<textarea cols='30' rows='3' placeholder='본문을 입력하세요.' ref={textarea}></textarea>
 				<br />
-				<button type='button'>cancel</button>
-				<button type='button' onClick={createPost}>
-					write
-				</button>
+				<nav className='btnSet'>
+					<button type='button' onClick={resetForm}>
+						cancel
+					</button>
+					<button type='button' onClick={createPost}>
+						write
+					</button>
+				</nav>
 			</div>
 			<div className='showBox'>
 				{Posts.map((post, idx) => {
 					return (
 						<article key={idx}>
-							<h2>{post.title}</h2>
-							<p>{post.content}</p>
-							<nav className='btnSet'>
-								<button type='button'>Edit</button>
-								<button type='button' onClick={() => deletePost(idx)}>
-									Delete
-								</button>
-							</nav>
+							{/* 분기처리 */}
+							{post.enableUpdate ? (
+								// 수정모드
+								<>
+									<p> 수정 모드 </p>
+								</>
+							) : (
+								// 출력모드
+								<>
+									<div className='txt'>
+										<h2>{post.title}</h2>
+										<p>{post.content}</p>
+									</div>
+									<nav className='btnSet'>
+										<button type='button' onClick={() => enableUpdate(idx)}>
+											Edit
+										</button>
+										<button type='button' onClick={() => deletePost(idx)}>
+											Delete
+										</button>
+									</nav>
+								</>
+							)}
 						</article>
 					);
 				})}
@@ -63,3 +91,8 @@ function Community() {
 }
 
 export default Community;
+/* 수정 모드 작업 흐름
+1- 수정 버튼 클릭시 해당 순번의 Posts의 객체에 수정관련 property 추가
+2- map으로 반복처리시 수정관련 property의 유무에 따라 수정모드, 출력모드 구분해서 분기처리 후 렌더링
+3- 출력모드: h2, p로 출력 / 수정모드: input, textarea로 값을 담아서 출력 (수정취소, 수정 버튼 추가)
+4- 수정모드에서 수정버튼 클릭시 State값 변경하고 해당 포스트의 수정관련 property 수정 */

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 function Member() {
 	const initVal = {
+		//실제 입력한 입력값을 담아서 DB에 넘겨지도록해야함
 		userId: '',
 		pwd1: '',
 		pwd2: '',

@@ -12,12 +12,16 @@ function Community() {
 	};
 
 	const createPost = () => {
-		if (!input.current.value.trim() || !textarea.current.vale.trim()) {
+		if (!input.current.value.trim() || !textarea.current.value.trim()) {
 			resetForm();
-			return alert('제목과 본문을 입력하세요.');
+			return alert('제목과 본문을 모두 입력하세요.');
 		}
-		setPosts([...Posts, { title: input.current.value, content: textarea.current.value }]);
+		setPosts([{ title: input.current.value, content: textarea.current.value }, ...Posts]);
 		resetForm();
+	};
+
+	const deletePost = (delIndex) => {
+		setPosts(Posts.filter((_, idx) => idx !== delIndex));
 	};
 
 	//post가 바뀔때마다
@@ -36,6 +40,22 @@ function Community() {
 				<button type='button' onClick={createPost}>
 					write
 				</button>
+			</div>
+			<div className='showBox'>
+				{Posts.map((post, idx) => {
+					return (
+						<article key={idx}>
+							<h2>{post.title}</h2>
+							<p>{post.content}</p>
+							<nav className='btnSet'>
+								<button type='button'>Edit</button>
+								<button type='button' onClick={() => deletePost(idx)}>
+									Delete
+								</button>
+							</nav>
+						</article>
+					);
+				})}
 			</div>
 		</Layout>
 	);

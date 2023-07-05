@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function News() {
+	const dummy = [
+		{ title: 'Hello06', content: 'Here comes description in detail.' },
+		{ title: 'Hello05', content: 'Here comes description in detail.' },
+		{ title: 'Hello04', content: 'Here comes description in detail.' },
+		{ title: 'Hello03', content: 'Here comes description in detail.' },
+		{ title: 'Hello02', content: 'Here comes description in detail.' },
+		{ title: 'Hello01', content: 'Here comes description in detail.' },
+	];
 	const getLocalData = () => {
 		const data = localStorage.getItem('post');
-		return JSON.parse(data); // data 문자값을 json 형태로 파싱
+		if (data) return JSON.parse(data); // data 문자값을 json 형태로 파싱
+		else return dummy;
 	};
+
 	const [Posts] = useState(getLocalData);
+
+	useEffect(() => {
+		localStorage.setItem('post', JSON.stringify(Posts));
+	}, [Posts]);
+
 	return (
 		<section id='news' className='myScroll'>
 			{Posts.map((post, idx) => {

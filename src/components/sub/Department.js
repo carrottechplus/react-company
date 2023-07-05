@@ -24,7 +24,10 @@ function Department() {
 		});
 	}, []);
 	return (
-		<Layout name={'Department'}>
+		//txt={['Hello', <br />, 'World!']}
+
+		// prop으로 자식 요소에 줄바꿈된 text를 전달하고 싶을 때, 줄바꿈될 부분에 구분자가 될 문자값을 넣어서 전달
+		<Layout name={'Department'} txt={'Hello-World'}>
 			{Members.map((member, idx) => {
 				return (
 					<article key={idx}>

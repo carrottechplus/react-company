@@ -8,19 +8,27 @@ function Gallery() {
 	const getFlickr = async (opt) => {
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
-		const myID = '198484213@N03';
 		const num = 20;
+		const myID = '198484213@N03';
 		const method_interest = 'flickr.interestingness.getList';
+		const method_search = 'flickr.photos.search';
+		const method_user = 'flickr.people.getPhotos';
 
 		let url = '';
 		if (opt.type === 'interest') url = `${baseURL}&api_key=${key}&method=${method_interest}&per_page=${num}`;
+		if (opt.type === 'search')
+			url = `${baseURL}&api_key=${key}&method=${method_search}&per_page=${num}&tags=${opt.tags}`;
+		if (opt.type === 'user')
+			url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
 
 		const result = await axios.get(url);
 		console.log(result.data.photos.photo);
 		setItems(result.data.photos.photo);
 	};
 
-	useEffect(() => getFlickr({ type: 'interest' }), []);
+	// useEffect(() => getFlickr({ type: 'interest' }), []);
+	useEffect(() => getFlickr({ type: 'search', tags: 'landscape' }), []);
+	// useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), []);
 
 	return (
 		<Layout name={'Gallery'}>

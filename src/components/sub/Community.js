@@ -69,12 +69,8 @@ function Community() {
 				return post;
 			})
 		);
+		setAllowed(true);
 	};
-
-	//post가 바뀔때마다
-	useEffect(() => {
-		console.log(Posts);
-	}, [Posts]);
 
 	return (
 		<Layout name={'Community'}>

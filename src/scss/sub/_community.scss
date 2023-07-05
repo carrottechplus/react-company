@@ -42,12 +42,29 @@
 				align-content: center;
 				background: #fff;
 				padding: 30px;
-				margin-bottom: 40px;
+
+				&:not(:first-child) {
+					margin-top: 40px;
+				}
 
 				.txt {
-					width: 84%;
+					width: 74%;
 					h2 {
 						margin-bottom: 10px;
+					}
+
+					input,
+					textarea {
+						width: 100%;
+						padding: 8px 10px;
+						border: 1px solid lightblue;
+						background: #f4ffff;
+						outline: none;
+						font-family: sans-serif;
+					}
+					textarea {
+						margin-top: 20px;
+						resize: none;
 					}
 				}
 				.btnSet {

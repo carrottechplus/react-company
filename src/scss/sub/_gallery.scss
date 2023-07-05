@@ -1,0 +1,36 @@
+.Gallery {
+	.frame {
+		&::after {
+			display: block;
+			clear: both;
+			content: '';
+		}
+
+		article {
+			width: 25%;
+			padding: 10px;
+			float: left;
+
+			.inner {
+				width: 100%;
+				background: #fff;
+				padding: 14px;
+				box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
+
+				.pic {
+					width: 100%;
+					img {
+						width: 100%;
+						object-fit: cover;
+					}
+				}
+				h2 {
+					font: normal 14px/1.2 'arial';
+					color: #777;
+					margin-bottom: 30px;
+					margin-top: 10px;
+				}
+			}
+		}
+	}
+}

@@ -9,7 +9,7 @@ function Gallery() {
 	const getFlickr = async (opt) => {
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
-		const num = 50;
+		const num = 100;
 		// const myID = '198484213@N03';
 		const method_interest = 'flickr.interestingness.getList';
 		const method_search = 'flickr.photos.search';
@@ -50,6 +50,7 @@ function Gallery() {
 										<img
 											src={`http://farm${item.farm}.staticflickr.com/${item.server}/buddyicons/${item.owner}.jpg`}
 											alt={item.title}
+											onError={(e) => e.target.setAttribute('src', 'https://www.flickr.com/images/buddyicon.gif')}
 										/>
 										<span>{item.owner}</span>
 									</div>

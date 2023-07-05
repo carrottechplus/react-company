@@ -2,13 +2,21 @@ import Layout from '../common/Layout';
 import { useState, useEffect, useRef } from 'react';
 
 function Community() {
+	const dummy = [
+		{ title: 'Hello05', content: 'Here comes description in detail.' },
+		{ title: 'Hello04', content: 'Here comes description in detail.' },
+		{ title: 'Hello03', content: 'Here comes description in detail.' },
+		{ title: 'Hello02', content: 'Here comes description in detail.' },
+		{ title: 'Hello01', content: 'Here comes description in detail.' },
+	];
+
 	// localStorage의 데이터를 반환하는 함수 정의
 	// 저장소에 값이 있으면 해당 값을 다시 json형태로 변경해서 반환
 	// 값이 없으면 빈 배열을 반환 함
 	const getLocalData = () => {
 		const data = localStorage.getItem('post');
 		if (data) return JSON.parse(data); // data 문자값을 json 형태로 파싱
-		else return [];
+		else return dummy;
 	};
 
 	const input = useRef(null);

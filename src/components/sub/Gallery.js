@@ -9,7 +9,7 @@ function Gallery() {
 	const getFlickr = async (opt) => {
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
-		const num = 20;
+		const num = 50;
 		// const myID = '198484213@N03';
 		const method_interest = 'flickr.interestingness.getList';
 		const method_search = 'flickr.photos.search';
@@ -46,6 +46,13 @@ function Gallery() {
 										/>
 									</div>
 									<h2>{item.title}</h2>
+									<div className='profile'>
+										<img
+											src={`http://farm${item.farm}.staticflickr.com/${item.server}/buddyicons/${item.owner}.jpg`}
+											alt={item.title}
+										/>
+										<span>{item.owner}</span>
+									</div>
 								</div>
 							</article>
 						);

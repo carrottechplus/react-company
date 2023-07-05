@@ -2,11 +2,22 @@ import Layout from '../common/Layout';
 import { useState, useEffect, useRef } from 'react';
 
 function Community() {
+	// localStorage의 데이터를 반환하는 함수 정의
+	// 저장소에 값이 있으면 해당 값을 다시 json형태로 변경해서 반환
+	// 값이 없으면 빈 배열을 반환 함
+	const getLocalData = () => {
+		const data = localStorage.getItem('post');
+		if (data) return JSON.parse(data); // data 문자값을 json 형태로 파싱
+		else return [];
+	};
+
 	const input = useRef(null);
 	const textarea = useRef(null);
 	const editInput = useRef(null);
 	const editTextarea = useRef(null);
-	const [Posts, setPosts] = useState([]);
+
+	// getLocalData 함수의 리턴값으로 post state 초기화
+	const [Posts, setPosts] = useState(getLocalData());
 	const [Allowed, setAllowed] = useState(true);
 
 	const resetForm = () => {
@@ -71,6 +82,12 @@ function Community() {
 		);
 		setAllowed(true);
 	};
+
+	useEffect(() => {
+		//저장하는거
+		// posts state 값이 변경될 때 마다 해당 데이터를 문자화해서 localstorage에 저장.
+		localStorage.setItem('post', JSON.stringify(Posts));
+	}, [Posts]);
 
 	return (
 		<Layout name={'Community'}>

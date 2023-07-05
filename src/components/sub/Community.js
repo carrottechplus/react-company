@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 function Community() {
 	const input = useRef(null);
 	const textarea = useRef(null);
+	const editInput = useRef(null);
+	const editTextarea = useRef(null);
 	const [Posts, setPosts] = useState([]);
 	const [Allowed, setAllowed] = useState(true);
 
@@ -51,6 +53,24 @@ function Community() {
 		setAllowed(true);
 	};
 
+	const updatePost = (editIndex) => {
+		if (!editInput.current.value.trim() || !editTextarea.current.value.trim()) {
+			return alert('test');
+		}
+
+		setPosts(
+			Posts.map((post, postIndex) => {
+				if (postIndex === editIndex) {
+					post.title = editInput.current.value;
+					post.content = editTextarea.current.value;
+
+					post.enableUpdate = false;
+				}
+				return post;
+			})
+		);
+	};
+
 	//post가 바뀔때마다
 	useEffect(() => {
 		console.log(Posts);
@@ -86,14 +106,16 @@ function Community() {
 										value - 리액트의 상태값에 관리되는 폼 요소,
 										defalutValue - 일반 돔에 의해 관리되는 폼 요소
 										 */}
-										<input type='text' defaultValue={post.title} />
-										<textarea defaultValue={post.content}></textarea>
+										<input type='text' defaultValue={post.title} ref={editInput} />
+										<textarea defaultValue={post.content} ref={editTextarea}></textarea>
 									</div>
 									<nav className='btnSet'>
 										<button type='button' onClick={() => disableUpdate(idx)}>
 											Cancel
 										</button>
-										<button type='button'>Update</button>
+										<button type='button' onClick={() => updatePost(idx)}>
+											Update
+										</button>
 									</nav>
 								</>
 							) : (

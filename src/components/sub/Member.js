@@ -9,8 +9,8 @@ function Member() {
 		pwd1: '',
 		pwd2: '',
 		email: '',
-		gender: false,
-		hobby: false,
+		gender: '', //true false가 아닌 뭘 선택했는지 정확히 확인하기 위함
+		hobby: [],
 		edu: '',
 		comments: '',
 	};
@@ -30,17 +30,19 @@ function Member() {
 	};
 
 	const handleRadio = (e) => {
-		const { name, checked } = e.target;
-		setVal({ ...Val, [name]: checked });
+		const { name, value } = e.target;
+		setVal({ ...Val, [name]: value });
 	};
 
 	const handleCheck = (e) => {
 		const { name } = e.target;
-		let isChecked = false;
 		const inputs = e.target.parentElement.querySelectorAll('input');
-		// 모든 체크박스를 반복 돌아서 하나라도 체크되어 있으면 반환
-		inputs.forEach((el) => el.checked && (isChecked = true));
-		setVal({ ...Val, [name]: isChecked });
+
+		let checkArr = [];
+		inputs.forEach((el) => {
+			if (el.checked) checkArr.push(el.value);
+		});
+		setVal({ ...Val, [name]: checkArr });
 	};
 
 	const handleSelect = (e) => {
@@ -80,10 +82,10 @@ function Member() {
 		if (value.email.length < 8 || !/@/.test(value.email)) {
 			errs.email = '이메일주소는 8글자 이상 @를 포함하세요.';
 		}
-		if (!value.gender) {
+		if (value.gender === '') {
 			errs.gender = '성별을 체크해주세요.';
 		}
-		if (!value.hobby) {
+		if (value.hobby.length === 0) {
 			errs.hobby = '취미를 1개 이상 체크해주세요.';
 		}
 		if (value.edu === '') {
@@ -107,6 +109,10 @@ function Member() {
 			history.push('/');
 		}
 	}, [Err]);
+
+	useEffect(() => {
+		console.log(Val);
+	}, [Val]);
 
 	return (
 		<Layout name={'Member'}>

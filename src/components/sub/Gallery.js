@@ -1,4 +1,5 @@
 import Layout from '../common/Layout';
+import Masonry from 'react-masonry-component';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
@@ -9,7 +10,7 @@ function Gallery() {
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
 		const num = 20;
-		const myID = '198484213@N03';
+		// const myID = '198484213@N03';
 		const method_interest = 'flickr.interestingness.getList';
 		const method_search = 'flickr.photos.search';
 		const method_user = 'flickr.people.getPhotos';
@@ -26,28 +27,30 @@ function Gallery() {
 		setItems(result.data.photos.photo);
 	};
 
-	// useEffect(() => getFlickr({ type: 'interest' }), []);
-	useEffect(() => getFlickr({ type: 'search', tags: 'landscape' }), []);
+	useEffect(() => getFlickr({ type: 'interest' }), []);
+	// useEffect(() => getFlickr({ type: 'search', tags: 'landscape' }), []);
 	// useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), []);
 
 	return (
 		<Layout name={'Gallery'}>
 			<div className='frame'>
-				{Items.map((item, idx) => {
-					return (
-						<article key={idx}>
-							<div className='inner'>
-								<div className='pic'>
-									<img
-										src={`https://live.staticflickr.com/${item.server}/${item.id}_${item.secret}_m.jpg`}
-										alt={item.title}
-									/>
+				<Masonry elementType={'div'} options={{ transitionDuration: '0.5s' }}>
+					{Items.map((item, idx) => {
+						return (
+							<article key={idx}>
+								<div className='inner'>
+									<div className='pic'>
+										<img
+											src={`https://live.staticflickr.com/${item.server}/${item.id}_${item.secret}_m.jpg`}
+											alt={item.title}
+										/>
+									</div>
+									<h2>{item.title}</h2>
 								</div>
-								<h2>{item.title}</h2>
-							</div>
-						</article>
-					);
-				})}
+							</article>
+						);
+					})}
+				</Masonry>
 			</div>
 		</Layout>
 	);

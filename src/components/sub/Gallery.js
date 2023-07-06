@@ -38,8 +38,8 @@ function Gallery() {
 				++counter.current;
 				console.log(counter);
 
-				// 로딩 완료된 이미지 수와 전체 이미지 수 *2가 같아질 때
-				if (counter.current === num * 2) {
+				// 로딩 완료된 이미지 수와 전체 이미지 수가 같아질 때
+				if (counter.current === imgs.length) {
 					// loader 제거하고 이미지 갤러리에 on class 추가
 					setLoader(false);
 
@@ -49,9 +49,9 @@ function Gallery() {
 		});
 	};
 
-	useEffect(() => getFlickr({ type: 'interest' }), []);
+	// useEffect(() => getFlickr({ type: 'interest' }), []);
 	// useEffect(() => getFlickr({ type: 'search', tags: 'landscape' }), []);
-	// useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), []);
+	useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), []);
 
 	return (
 		<Layout name={'Gallery'}>

@@ -4,17 +4,18 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 function Gallery() {
+	const btnMine = useRef(null);
+	const btnInterest = useRef(null);
+	const enableEvent = useRef(true);
 	const frame = useRef(null);
-	// const counter = useRef(0);
 	const [Items, setItems] = useState([]);
 	const [Loader, setLoader] = useState(true); // true 로딩바가 맨처음에 보여야하니까
 
 	const getFlickr = async (opt) => {
-		// 새롭게 data fetching이 실행되면 참조객체에 담겨있는 counter값을 다시 0 으로 초기화. uerRef로 참조한 값은 컴포넌트가 재실행되더라도 일반 변수처럼 초기화 되는것이 아니라 직접 초기화 해야함!
 		let counter = 0; //state에 담으면 계속 재랜더링 그러므로 useRef썻는데,, 값이 사라지는게 아니라서 초기화가 필요함.
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
-		const num = 50;
+		const num = 60;
 		// const myID = '198484213@N03';
 		const method_interest = 'flickr.interestingness.getList';
 		const method_search = 'flickr.photos.search';
@@ -28,24 +29,26 @@ function Gallery() {
 			url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
 
 		const result = await axios.get(url); //동기화
-		console.log(result.data.photos.photo);
+		console.log(result);
 		setItems(result.data.photos.photo);
 
-		// 외부 데이터가 State에 담기고 DOM이 생성되는 숭간 모든 img 요소를 찾아서 반복 처리
 		const imgs = frame.current.querySelectorAll('img');
-		imgs.forEach((img, idx) => {
-			// 이미지요소에 load 이벤트가 발생할 때 (소스 이미지까지 로딩이 완료될 때 마다)
+		imgs.forEach((img) => {
 			img.onload = () => {
-				// 내부적으로 카운터값을 1씩 증가
 				++counter;
 				console.log(counter);
 
-				// 로딩 완료된 이미지 수와 전체 이미지 수가 같아질 때
-				if (counter === imgs.length) {
-					// loader 제거하고 이미지 갤러리에 on class 추가
+				if (counter === imgs.length - 1) {
 					setLoader(false);
 
 					frame.current.classList.add('on');
+
+					// 모션 중 재이벤트 방지시 모션이 끝날 떄까지 이벤트를 방지를 시켜도, 모션이  끝나는 순간에도 이벤트가 많이 발생하면 특정앖이 바뀌는 순간보다 이벤트가 더 빨리 들어가서 오류가 발새할 수 있음.
+					// 해결방법 - 물리적으로 이벤트 호출을 지연시키여서 마지막 발생한 이벤트만 동작처리 (debouncing)
+					// 단 시간에 많이 발생하는 이벤트시 함수 호출을 줄이는 방법
+					// debouncing
+					// throttling
+					enableEvent.current = true;
 				}
 			};
 		});
@@ -58,7 +61,13 @@ function Gallery() {
 	return (
 		<Layout name={'Gallery'}>
 			<button
-				onClick={() => {
+				ref={btnInterest}
+				onClick={(e) => {
+					if (!enableEvent.current) return; //모션중이면 return 으로 끊음.
+					if (e.target.classList.contains('on')) return;
+					btnMine.current.classList.remove('on');
+					e.target.classList.add('on');
+					enableEvent.current = false;
 					setLoader(true);
 					frame.current.classList.remove('on');
 					getFlickr({ type: 'interest' });
@@ -67,7 +76,14 @@ function Gallery() {
 				Interest Gallery
 			</button>
 			<button
-				onClick={() => {
+				className='on'
+				ref={btnMine}
+				onClick={(e) => {
+					if (!enableEvent.current) return;
+					if (e.target.classList.contains('on')) return;
+					btnInterest.current.classList.remove('on');
+					e.target.classList.add('on');
+					enableEvent.current = false;
 					setLoader(true);
 					frame.current.classList.remove('on');
 					getFlickr({ type: 'user', user: '198484213@N03' });
@@ -94,7 +110,16 @@ function Gallery() {
 											alt={item.title}
 											onError={(e) => e.target.setAttribute('src', 'https://www.flickr.com/images/buddyicon.gif')}
 										/>
-										<span>{item.owner}</span>
+										<span
+											onClick={(e) => {
+												setLoader(true);
+												frame.current.classList.remove('on');
+												console.log(e.target.innerText);
+												getFlickr({ type: 'user', user: e.target.innerText });
+											}}
+										>
+											{item.owner}
+										</span>
 									</div>
 								</div>
 							</article>

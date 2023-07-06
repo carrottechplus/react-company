@@ -30,14 +30,22 @@ function Gallery() {
 			url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
 
 		const result = await axios.get(url); //동기화
-		console.log(result);
+		if (result.data.photos.photo.length === 0) {
+			setLoader(false);
+			frame.current.classList.add('on');
+			const btnMine = btnSet.current.children;
+			btnMine[1].classList.add('on');
+			getFlickr({ type: 'user', user: '198484213@N03' });
+			enableEvent.current = true;
+			return alert('결과값이 없습니다.');
+		}
 		setItems(result.data.photos.photo);
 
 		const imgs = frame.current.querySelectorAll('img');
 		imgs.forEach((img) => {
 			img.onload = () => {
 				++counter;
-				console.log(counter);
+				// console.log(counter);
 
 				if (counter === imgs.length - 1) {
 					setLoader(false);
@@ -144,7 +152,7 @@ function Gallery() {
 											onClick={(e) => {
 												setLoader(true);
 												frame.current.classList.remove('on');
-												console.log(e.target.innerText);
+												// console.log(e.target.innerText);
 												getFlickr({ type: 'user', user: e.target.innerText });
 											}}
 										>

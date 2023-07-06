@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 function Gallery() {
+	const isUser = useRef(true);
 	const searchInput = useRef(null);
 	const btnSet = useRef(null);
 	const enableEvent = useRef(true);
@@ -15,7 +16,7 @@ function Gallery() {
 		let counter = 0;
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
-		const num = 50;
+		const num = 100;
 		// const myID = '198484213@N03';
 		const method_interest = 'flickr.interestingness.getList';
 		const method_search = 'flickr.photos.search';
@@ -80,6 +81,7 @@ function Gallery() {
 
 		//새로운 데이터로 갤러리 생성 함수 호출
 		getFlickr({ type: 'interest' });
+		isUser.current = false;
 	};
 
 	const showMine = (e) => {
@@ -104,6 +106,7 @@ function Gallery() {
 		getFlickr({ type: 'search', tags: tag });
 
 		searchInput.current.value = '';
+		isUser.current = false;
 	};
 
 	// useEffect(() => getFlickr({ type: 'interest' }), []);
@@ -150,9 +153,10 @@ function Gallery() {
 										/>
 										<span
 											onClick={(e) => {
+												if (isUser.current) return;
+												isUser.current = true;
 												setLoader(true);
 												frame.current.classList.remove('on');
-												// console.log(e.target.innerText);
 												getFlickr({ type: 'user', user: e.target.innerText });
 											}}
 										>

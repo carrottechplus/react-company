@@ -4,8 +4,7 @@ import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
 
 function Gallery() {
-	const btnMine = useRef(null);
-	const btnInterest = useRef(null);
+	const btnSet = useRef(null);
 	const enableEvent = useRef(true);
 	const frame = useRef(null);
 	const [Items, setItems] = useState([]);
@@ -42,16 +41,23 @@ function Gallery() {
 					setLoader(false);
 
 					frame.current.classList.add('on');
-
-					// 모션 중 재이벤트 방지시 모션이 끝날 떄까지 이벤트를 방지를 시켜도, 모션이  끝나는 순간에도 이벤트가 많이 발생하면 특정앖이 바뀌는 순간보다 이벤트가 더 빨리 들어가서 오류가 발새할 수 있음.
-					// 해결방법 - 물리적으로 이벤트 호출을 지연시키여서 마지막 발생한 이벤트만 동작처리 (debouncing)
-					// 단 시간에 많이 발생하는 이벤트시 함수 호출을 줄이는 방법
-					// debouncing
-					// throttling
 					enableEvent.current = true;
 				}
 			};
 		});
+	};
+
+	// 기존 갤러리 초기화 함수
+	const resetGallery = (e) => {
+		const btns = btnSet.current.querySelectorAll('button');
+		btns.forEach((el) => {
+			el.classList.remove('on');
+		});
+
+		e.target.classList.add('on');
+		enableEvent.current = false;
+		setLoader(true);
+		frame.current.classList.remove('on');
 	};
 
 	// useEffect(() => getFlickr({ type: 'interest' }), []);
@@ -60,37 +66,29 @@ function Gallery() {
 
 	return (
 		<Layout name={'Gallery'}>
-			<button
-				ref={btnInterest}
-				onClick={(e) => {
-					if (!enableEvent.current) return; //모션중이면 return 으로 끊음.
-					if (e.target.classList.contains('on')) return;
-					btnMine.current.classList.remove('on');
-					e.target.classList.add('on');
-					enableEvent.current = false;
-					setLoader(true);
-					frame.current.classList.remove('on');
-					getFlickr({ type: 'interest' });
-				}}
-			>
-				Interest Gallery
-			</button>
-			<button
-				className='on'
-				ref={btnMine}
-				onClick={(e) => {
-					if (!enableEvent.current) return;
-					if (e.target.classList.contains('on')) return;
-					btnInterest.current.classList.remove('on');
-					e.target.classList.add('on');
-					enableEvent.current = false;
-					setLoader(true);
-					frame.current.classList.remove('on');
-					getFlickr({ type: 'user', user: '198484213@N03' });
-				}}
-			>
-				my Gallery
-			</button>
+			<div className='btnSet' ref={btnSet}>
+				<button
+					onClick={(e) => {
+						if (!enableEvent.current) return; //모션중이면 return 으로 끊음.
+						if (e.target.classList.contains('on')) return;
+						resetGallery(e);
+						getFlickr({ type: 'interest' });
+					}}
+				>
+					Interest Gallery
+				</button>
+				<button
+					className='on'
+					onClick={(e) => {
+						if (!enableEvent.current) return;
+						if (e.target.classList.contains('on')) return;
+						resetGallery(e);
+						getFlickr({ type: 'user', user: '198484213@N03' });
+					}}
+				>
+					my Gallery
+				</button>
+			</div>
 			<div className='frame' ref={frame}>
 				<Masonry elementType={'div'} options={{ transitionDuration: '0.5s' }}>
 					{Items.map((item, idx) => {

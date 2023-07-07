@@ -1,0 +1,19 @@
+#mobilePanel {
+	//width: 350px 최소
+	width: 280px;
+	height: 100%;
+	background: #111;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 5;
+
+	h1 {
+		height: 80px;
+		border-bottom: 1px solid #ddd;
+		padding: 20px 10vw;
+		font: bold 24px/40px 'arial';
+		color: #fff;
+		margin-bottom: 30px;
+	}
+}

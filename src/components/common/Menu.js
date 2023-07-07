@@ -8,7 +8,15 @@ const Menu = forwardRef((props, ref) => {
 			toggle: () => setOpen(!Open),
 		};
 	});
-	return <>{Open && <nav>Menu</nav>}</>;
+	return (
+		<>
+			{Open && (
+				<nav id='mobilePanel'>
+					<h1>LOGO</h1>
+				</nav>
+			)}
+		</>
+	);
 });
 
 export default Menu;

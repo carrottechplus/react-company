@@ -30,10 +30,16 @@ header {
 			}
 		}
 	}
-	.fa-bars {
-		color: #333;
-		font-size: 20px;
+	.menuOpen {
 		display: none;
+		background-color: transparent;
+		border: none;
+		cursor: pointer;
+
+		.fa-bars {
+			color: #333;
+			font-size: 20px;
+		}
 	}
 }
 
@@ -58,8 +64,10 @@ header.main {
 		}
 	}
 
-	.fa-bars {
-		color: white;
+	.menuOpen {
+		.fa-bars {
+			color: white;
+		}
 	}
 }
 
@@ -84,10 +92,12 @@ header.main {
 			display: none;
 		}
 
-		.fa-bars {
-			color: #333;
-			font-size: 20px;
+		.menuOpen {
 			display: inline-block;
+			.fa-bars {
+				color: #333;
+				font-size: 20px;
+			}
 		}
 	}
 }

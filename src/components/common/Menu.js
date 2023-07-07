@@ -8,7 +8,7 @@ const Menu = forwardRef((props, ref) => {
 			toggle: () => setOpen(!Open),
 		};
 	});
-	return <nav>Menu</nav>;
+	return <>{Open && <nav>Menu</nav>}</>;
 });
 
 export default Menu;

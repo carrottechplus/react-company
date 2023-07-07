@@ -1,10 +1,18 @@
-import { forwardRef, useState, useImperativeHandle } from 'react';
+import { forwardRef, useState, useImperativeHandle, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, NavLink } from 'react-router-dom';
 
 const Menu = forwardRef((props, ref) => {
 	const active = { color: 'aqua' };
 	const [Open, setOpen] = useState(false);
+
+	useEffect(() => {
+		window.addEventListener('resize', () => {
+			if (window.innerWidth >= 1200) {
+				setOpen(false);
+			}
+		});
+	}, []);
 
 	useImperativeHandle(ref, () => {
 		return {
@@ -13,6 +21,7 @@ const Menu = forwardRef((props, ref) => {
 	});
 	return (
 		<AnimatePresence>
+			{/* 항상 헤더 안쪽에 마운트 되어 있으며 open t/f에 따라 보여지고 안보여지는 상태. */}
 			{Open && (
 				<motion.nav
 					id='mobilePanel'

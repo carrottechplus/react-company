@@ -12,8 +12,19 @@
 		height: 80px;
 		border-bottom: 1px solid #ddd;
 		padding: 20px 10vw;
-		font: bold 24px/40px 'arial';
-		color: #fff;
 		margin-bottom: 30px;
+
+		a {
+			font: bold 24px/40px 'arial';
+			color: #fff;
+		}
+	}
+
+	#gnbMo {
+		li {
+			a {
+				color: #fff;
+			}
+		}
 	}
 }

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import Anime from '../../asset/anime';
 
 function Btns({ setScrolled, setPos }) {
@@ -7,16 +7,17 @@ function Btns({ setScrolled, setPos }) {
 
 	const [Num, setNum] = useState(0);
 
-	const getPos = () => {
+	// useCallback으로 memoization 처리, 임시적으로 setPos부분은 풀리게
+	const getPos = useCallback(() => {
 		pos.current = [];
 		const secs = btnRef.current.parentElement.querySelectorAll('.myScroll');
 
 		for (const sec of secs) pos.current.push(sec.offsetTop);
 		setNum(pos.current.length);
 		setPos(pos.current);
-	};
+	}, [setPos]);
 
-	const activation = () => {
+	const activation = useCallback(() => {
 		//스크롤
 		const base = -window.innerHeight / 3;
 		const scroll = window.scrollY;
@@ -32,14 +33,13 @@ function Btns({ setScrolled, setPos }) {
 				boxs[idx].classList.add('on');
 			}
 		});
-	};
+	}, [setScrolled]);
 
 	useEffect(() => {
 		getPos();
 		window.addEventListener('resize', getPos);
 		window.addEventListener('scroll', activation);
 
-		// 리액트는 spa 이기 때문에 페이지가 변경된다고 하더라도 스크롤 위치값이 초기화 되지 않으므로 mount 시 마다 스크롤값을 초기화 해야함.
 		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
 		return () => {
@@ -47,7 +47,7 @@ function Btns({ setScrolled, setPos }) {
 			window.removeEventListener('scroll', activation);
 			window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 		};
-	}, []);
+	}, [getPos, activation]);
 
 	return (
 		<ul className='btnNav' ref={btnRef}>

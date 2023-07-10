@@ -27,7 +27,7 @@ function App() {
 		<>
 			{/* Switch는 더 먼저나온 라우터 선택 */}
 			<Switch>
-				<Route exact path='/' render={() => <Main />} />
+				<Route exact path='/' render={() => <Main menu={menu} />} />
 
 				{/* 기본 형태 ( 특정 문자값을 전달해야하는 )
 				<Route path='/'>

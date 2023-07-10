@@ -1,7 +1,7 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, NavLink } from 'react-router-dom';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 // import Menu from './Menu';
 
 function Header({ type, menu }) {
@@ -62,4 +62,4 @@ function Header({ type, menu }) {
 	);
 }
 
-export default Header;
+export default memo(Header);

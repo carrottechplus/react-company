@@ -2,10 +2,10 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, NavLink } from 'react-router-dom';
 import { useRef } from 'react';
-import Menu from './Menu';
+// import Menu from './Menu';
 
-function Header({ type }) {
-	const openMenu = useRef(null);
+function Header({ type, menu }) {
+	// const openMenu = useRef(null);
 	const active = 'on';
 	return (
 		// props로 전달되는 type값을 header의 class명으로 지정해서 스타일 분기처리
@@ -50,13 +50,14 @@ function Header({ type }) {
 					type='button'
 					className='menuOpen'
 					onClick={() => {
-						openMenu.current.toggle();
+						// openMenu.current.toggle();
+						menu.current.toggle();
 					}}
 				>
 					<FontAwesomeIcon icon={faBars} />
 				</button>
 			</header>
-			<Menu ref={openMenu} />
+			{/* <Menu ref={openMenu} /> */}
 		</>
 	);
 }

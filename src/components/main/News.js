@@ -19,6 +19,7 @@ function News() {
 
 	useEffect(() => {
 		localStorage.setItem('post', JSON.stringify(Posts));
+		//아래 Posts 꼭 쓸필요 없음. 왜냐 위에 내용이 여기서 바뀌는게 아니고 community에서 바뀌기 때문.
 	}, [Posts]);
 
 	return (

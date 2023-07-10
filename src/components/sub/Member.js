@@ -1,23 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import Layout from '../common/Layout';
 import { useHistory } from 'react-router-dom';
 
 function Member() {
-	const initVal = {
-		//실제 입력한 입력값을 담아서 DB에 넘겨지도록해야함
-		userId: '',
-		pwd1: '',
-		pwd2: '',
-		email: '',
-		gender: '', //true false가 아닌 뭘 선택했는지 정확히 확인하기 위함
-		hobby: [],
-		edu: '',
-		comments: '',
-	};
+	// initVal의 값은 변경될 필요가 없는 초기값이긴 하나 컴포넌트가 재호출 될 때마다 계속해서 초기화되는  값이므로 해당 값을 초기화하지 않고 메모이제이션할 필요가 있음 (선택사항)
+	const initVal = useMemo(() => {
+		return {
+			//실제 입력한 입력값을 담아서 DB에 넘겨지도록해야함
+			userId: '',
+			pwd1: '',
+			pwd2: '',
+			email: '',
+			gender: '', //true false가 아닌 뭘 선택했는지 정확히 확인하기 위함
+			hobby: [],
+			edu: '',
+			comments: '',
+		};
+	}, []);
 
 	const [Val, setVal] = useState(initVal);
 	const [Err, setErr] = useState({});
 	const [Submit, setSubmit] = useState(false);
+
+	const selectEl = useRef(null);
+	const radioGroup = useRef(null);
+	const checkGroup = useRef(null);
 	const history = useHistory();
 
 	const handleChange = (e) => {
@@ -97,6 +104,16 @@ function Member() {
 		return errs;
 	};
 
+	const resetForm = useCallback(() => {
+		const select = selectEl.current.options[0];
+		const checks = checkGroup.current.querySelectorAll('input');
+		const radios = radioGroup.current.querySelectorAll('input');
+		select.selected = true;
+		checks.forEach((el) => (el.checked = false));
+		radios.forEach((el) => (el.checked = false));
+		setVal(initVal);
+	}, [initVal]);
+
 	useEffect(() => {
 		// 에러 스테이트 안에 값이 없으면 통과 있으면 실패. 객체의 key값을 반복돌아서 확인
 
@@ -106,9 +123,10 @@ function Member() {
 		const len = Object.keys(Err).length;
 		if (len === 0 && Submit) {
 			alert('모든 인증을 통과했습니다.');
-			history.push('/');
+			// history.push('/');
+			resetForm();
 		}
-	}, [Err]);
+	}, [Err, Submit, resetForm]);
 
 	useEffect(() => {
 		console.log(Val);

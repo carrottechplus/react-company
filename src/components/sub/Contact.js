@@ -1,5 +1,5 @@
 import Layout from '../common/Layout';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import emailjs from '@emailjs/browser';
 
 function Contact() {
@@ -14,7 +14,8 @@ function Contact() {
 	const [Success, setSuccess] = useState(false);
 
 	const { kakao } = window;
-	const info = [
+
+	const info = useRef([
 		{
 			title: '삼성역 코엑스',
 			latlng: new kakao.maps.LatLng(37.51100661425726, 127.06162026853143),
@@ -36,18 +37,29 @@ function Contact() {
 			imgSize: new kakao.maps.Size(232, 99),
 			imgPos: { offset: new kakao.maps.Point(116, 99) },
 		},
-	];
-	const option = {
-		center: info[Index].latlng,
-		level: 3,
-	};
+	]);
+
+	// const option = { center: info.current[Index].latlng, level: 3 };
 
 	//아래 5개 변수값들은 useEffect구문에서 인스턴스 생성할때만 필요한 정보값에 불과하므로 미리 읽히도록 useEffect바깥에 배치
-	const imgSrc = info[Index].imgSrc;
-	const imgSize = info[Index].imgSize;
-	const imgPos = info[Index].imgPos;
-	const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
-	const marker = new kakao.maps.Marker({ position: option.center, image: markerImage });
+	// const imgSrc = info.current[Index].imgSrc;
+	// const imgSize = info.current[Index].imgSize;
+	// const imgPos = info.current[Index].imgPos;
+	// const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
+
+	// const markerImage = new kakao.maps.MarkerImage(info.current[Index].imgSrc, info.current[Index].imgSize, info.current[Index].imgPos);
+
+	// marker 정보값을 메모이제이션 할 때, useRef는 안되고 useMemo는 되는 이유
+	const marker = useMemo(() => {
+		return new kakao.maps.Marker({
+			position: info.current[Index].latlng,
+			image: new kakao.maps.MarkerImage(
+				info.current[Index].imgSrc,
+				info.current[Index].imgSize,
+				info.current[Index].imgPos
+			),
+		});
+	}, [Index, kakao]);
 
 	const sendEmail = (e) => {
 		e.preventDefault();
@@ -69,7 +81,7 @@ function Contact() {
 
 	useEffect(() => {
 		container.current.innerHTML = '';
-		const mapInstance = new kakao.maps.Map(container.current, option);
+		const mapInstance = new kakao.maps.Map(container.current, { center: info.current[Index].latlng, level: 3 });
 		marker.setMap(mapInstance);
 
 		mapInstance.addControl(new kakao.maps.MapTypeControl(), kakao.maps.ControlPosition.TOPRIGHT);
@@ -79,7 +91,7 @@ function Contact() {
 		mapInstance.setZoomable(false);
 
 		const setCenter = () => {
-			mapInstance.panTo(info[Index].latlng);
+			mapInstance.panTo(info.current[Index].latlng);
 		};
 
 		window.addEventListener('resize', setCenter);
@@ -87,13 +99,13 @@ function Contact() {
 			//unmount 되었을때
 			window.removeEventListener('resize', setCenter);
 		};
-	}, [Index]);
+	}, [Index, kakao, marker]);
 
 	useEffect(() => {
 		Traffic
 			? Location?.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC)
 			: Location?.removeOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
-	}, [Traffic]);
+	}, [Traffic, Location, kakao]);
 
 	return (
 		<Layout name={'Contact'}>
@@ -102,7 +114,7 @@ function Contact() {
 				{Traffic ? 'Traffic OFF' : 'Traffic ON'}
 			</button>
 			<ul className='branch'>
-				{info.map((el, idx) => {
+				{info.current.map((el, idx) => {
 					return (
 						<li key={idx} className={idx === Index ? 'on' : ''} onClick={() => setIndex(idx)}>
 							{el.title}

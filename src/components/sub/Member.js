@@ -1,31 +1,28 @@
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Layout from '../common/Layout';
 import { useHistory } from 'react-router-dom';
 
 function Member() {
-	// initVal의 값은 변경될 필요가 없는 초기값이긴 하나 컴포넌트가 재호출 될 때마다 계속해서 초기화되는  값이므로 해당 값을 초기화하지 않고 메모이제이션할 필요가 있음 (선택사항)
-	const initVal = useMemo(() => {
-		return {
-			//실제 입력한 입력값을 담아서 DB에 넘겨지도록해야함
-			userId: '',
-			pwd1: '',
-			pwd2: '',
-			email: '',
-			gender: '', //true false가 아닌 뭘 선택했는지 정확히 확인하기 위함
-			hobby: [],
-			edu: '',
-			comments: '',
-		};
-	}, []);
-
-	const [Val, setVal] = useState(initVal);
-	const [Err, setErr] = useState({});
-	const [Submit, setSubmit] = useState(false);
-
 	const selectEl = useRef(null);
 	const radioGroup = useRef(null);
 	const checkGroup = useRef(null);
 	const history = useHistory();
+	// initVal의 값은 변경될 필요가 없는 초기값이긴 하나 컴포넌트가 재호출 될 때마다 계속해서 초기화되는  값이므로 해당 값을 초기화하지 않고 메모이제이션할 필요가 있음 (선택사항)
+	const initVal = useRef({
+		//실제 입력한 입력값을 담아서 DB에 넘겨지도록해야함
+		userId: '',
+		pwd1: '',
+		pwd2: '',
+		email: '',
+		gender: '', //true false가 아닌 뭘 선택했는지 정확히 확인하기 위함
+		hobby: [],
+		edu: '',
+		comments: '',
+	});
+
+	const [Val, setVal] = useState(initVal.current);
+	const [Err, setErr] = useState({});
+	const [Submit, setSubmit] = useState(false);
 
 	const handleChange = (e) => {
 		//현재 입력하고 있는 input 요소의 name,vale값을 비구조할당으로 뽑아서 출력
@@ -63,7 +60,7 @@ function Member() {
 
 		// check가 반환하는 인증 메세지가 있으면 해당 메세지를 화면에 출력하고 전송 중지
 		// 그렇지않으면 인증 성공
-		console.log(check(Val));
+		// console.log(check(Val));
 		setErr(check(Val));
 		setSubmit(true);
 	};
@@ -112,7 +109,7 @@ function Member() {
 		checks.forEach((el) => (el.checked = false));
 		radios.forEach((el) => (el.checked = false));
 		setVal(initVal);
-	}, [initVal]);
+	}, []);
 
 	useEffect(() => {
 		// 에러 스테이트 안에 값이 없으면 통과 있으면 실패. 객체의 key값을 반복돌아서 확인
@@ -128,9 +125,9 @@ function Member() {
 		}
 	}, [Err, Submit, resetForm]);
 
-	useEffect(() => {
-		console.log(Val);
-	}, [Val]);
+	// useEffect(() => {
+	// 	console.log(Val);
+	// }, [Val]);
 
 	return (
 		<Layout name={'Member'}>
@@ -142,7 +139,7 @@ function Member() {
 			>
 				뒤로가기
 			</button>
-			<form action='' onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit}>
 				<fieldset>
 					<legend className='hidden'>회원가입 폼 양식</legend>
 					<table>

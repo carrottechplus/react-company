@@ -1,7 +1,7 @@
 import Layout from '../common/Layout';
 import Masonry from 'react-masonry-component';
 import axios from 'axios';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Modal from '../common/Modal';
 
 function Gallery() {
@@ -15,7 +15,7 @@ function Gallery() {
 	const [Loader, setLoader] = useState(true);
 	const [Index, setIndex] = useState(0);
 
-	const getFlickr = async (opt) => {
+	const getFlickr = useCallback(async (opt) => {
 		let counter = 0;
 		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
 		const key = '6c70577e2661042cd0ab587b17f6c944';
@@ -66,7 +66,7 @@ function Gallery() {
 				}
 			};
 		});
-	};
+	}, []);
 
 	// 기존 갤러리 초기화 함수
 	const resetGallery = (e) => {
@@ -119,9 +119,7 @@ function Gallery() {
 		isUser.current = false;
 	};
 
-	// useEffect(() => getFlickr({ type: 'interest' }), []);
-	// useEffect(() => getFlickr({ type: 'search', tags: 'landscape' }), []);
-	useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), []);
+	useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), [getFlickr]); //state값이 아닌 함수가 들어갈 경우 무한 루프
 
 	return (
 		<>

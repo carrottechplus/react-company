@@ -9,3 +9,6 @@ ReactDOM.render(
 	</HashRouter>,
 	document.getElementById('root')
 );
+
+// npm i redux
+// npm i react-redux

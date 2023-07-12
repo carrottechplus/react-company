@@ -1,42 +1,8 @@
 // store의 데이터를 변경해주는 변형자 함수
 import { combineReducers } from 'redux';
 
-const initMember = {
-	members: [
-		{
-			name: 'Julia',
-			position: 'President',
-			pic: 'member1.jpg',
-		},
-		{
-			name: 'David',
-			position: 'Vice President',
-			pic: 'member2.jpg',
-		},
-		{
-			name: 'Emily',
-			position: 'UI Designer',
-			pic: 'member3.jpg',
-		},
-		{
-			name: 'Paul',
-			position: 'Front-end Engineer',
-			pic: 'member4.jpg',
-		},
-		{
-			name: 'Sara',
-			position: 'Back-end Engineer',
-			pic: 'member5.jpg',
-		},
-		{
-			name: 'Michael',
-			position: 'Project Manager',
-			pic: 'member6.jpg',
-		},
-	],
-};
-
-const memberReducer = (state = initMember, action) => {
+// 비동기형식으로 받을 데이터를 빈배열로 초기화
+const memberReducer = (state = { members: [] }, action) => {
 	switch (action.type) {
 		case 'SET_MEMBERS':
 			return { ...state, members: action.payload };

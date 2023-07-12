@@ -19,7 +19,7 @@ import Youtube from './components/sub/Youtube';
 
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { setYoutube } from './redux/action';
+import { setMembers, setYoutube } from './redux/action';
 
 //scss
 import './scss/style.scss';
@@ -28,6 +28,13 @@ import './scss/style.scss';
 function App() {
 	const dispatch = useDispatch();
 	const menu = useRef(null);
+
+	// 메인 처음 마운트시 데이터 fetching후 store에 저장
+	const fetchMembers = useCallback(async () => {
+		const result = await axios.get(`${process.env.PUBLIC_URL}/DB/members.json`);
+		console.log(result.data.members);
+		dispatch(setMembers(result.data.members));
+	}, [dispatch]);
 
 	const fetchYoutube = useCallback(async () => {
 		const key = 'AIzaSyC4TpEbx2d9lOtjiVQIg3b6wA6ZKKrDL7c';
@@ -41,7 +48,8 @@ function App() {
 
 	useEffect(() => {
 		fetchYoutube();
-	}, [fetchYoutube]);
+		fetchMembers();
+	}, [fetchYoutube, fetchMembers]);
 
 	return (
 		<>

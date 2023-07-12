@@ -1,9 +1,7 @@
 import Layout from '../common/Layout';
-import axios from 'axios';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import Modal from '../common/Modal';
-import { useDispatch, useSelector } from 'react-redux';
-import { setYoutube } from '../../redux/action';
+import { useSelector } from 'react-redux';
 
 function Youtube() {
 	// 1.  Vids라는 지역 State값이 필요 없게 되어 전역으로 바꿔야함.
@@ -11,22 +9,6 @@ function Youtube() {
 	const modal = useRef(null);
 	const [Index, setIndex] = useState(0);
 
-	// 2. 데이터가 받아지는 시점. 지역State가 아니라 action 객체로 전달해야함.
-	const dispatch = useDispatch();
-
-	const fetchYoutube = async () => {
-		const key = 'AIzaSyC4TpEbx2d9lOtjiVQIg3b6wA6ZKKrDL7c';
-		const list = 'PLQZTVbf9_qAn_Nwrz2maZG64AaEBcFZfb';
-		const num = 10;
-		const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${list}&key=${key}&maxResults=${num}`;
-
-		const result = await axios.get(url);
-		dispatch(setYoutube(result.data.items));
-	};
-
-	useEffect(() => {
-		fetchYoutube();
-	}, []);
 	return (
 		<>
 			<Layout name={'Youtube'}>

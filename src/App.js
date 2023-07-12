@@ -1,5 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 
 // common
 import Header from './components/common/Header';
@@ -17,12 +17,32 @@ import Gallery from './components/sub/Gallery';
 import Member from './components/sub/Member';
 import Youtube from './components/sub/Youtube';
 
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setYoutube } from './redux/action';
+
 //scss
 import './scss/style.scss';
 
 // memu 컴포넌트를 app에서 호출한 뒤 토글 객체를 각각 메인, 서브 헤더로 전달해서 토글 메뉴 기능이 동작하도로 수정해보기
 function App() {
+	const dispatch = useDispatch();
 	const menu = useRef(null);
+
+	const fetchYoutube = useCallback(async () => {
+		const key = 'AIzaSyC4TpEbx2d9lOtjiVQIg3b6wA6ZKKrDL7c';
+		const list = 'PLQZTVbf9_qAn_Nwrz2maZG64AaEBcFZfb';
+		const num = 10;
+		const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${list}&key=${key}&maxResults=${num}`;
+
+		const result = await axios.get(url);
+		dispatch(setYoutube(result.data.items));
+	}, [dispatch]);
+
+	useEffect(() => {
+		fetchYoutube();
+	}, [fetchYoutube]);
+
 	return (
 		<>
 			{/* Switch는 더 먼저나온 라우터 선택 */}

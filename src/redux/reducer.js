@@ -1,7 +1,6 @@
 // store의 데이터를 변경해주는 변형자 함수
 import { combineReducers } from 'redux';
 
-//members.json 통쨰로 가져옴 (동적인 것 제어 가능)
 const initMember = {
 	members: [
 		{
@@ -37,7 +36,6 @@ const initMember = {
 	],
 };
 
-//초기 데이터값을 state로 지정하고 추후 action 객체가 넘어오게되면 action의 Type에 따라서 해당 데이터를 변경해주는 변형자 함수 생성
 const memberReducer = (state = initMember, action) => {
 	switch (action.type) {
 		case 'SET_MEMBERS':
@@ -47,7 +45,16 @@ const memberReducer = (state = initMember, action) => {
 	}
 };
 
-//해당 변형자 함수가 반환하는 객체값을 하나의 객체로 합쳐서 외부로 export
-const reducers = combineReducers({ memberReducer });
+const youtubeReducer = (state = { youtube: [] }, action) => {
+	// [] youtube 데이터를 모두 가져올 수 없으니 빈 배열값으로 초기세팅, 근데 state에는 무조건 객체형식으로 들어가야하기 떄문에 {}
+	switch (action.type) {
+		case 'SET_YOUTUBE':
+			return { ...state, youtube: action.payload };
+		default:
+			return state;
+	}
+};
+
+const reducers = combineReducers({ memberReducer, youtubeReducer });
 
 export default reducers;

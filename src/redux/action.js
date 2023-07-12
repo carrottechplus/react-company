@@ -8,3 +8,12 @@ export const setMembers = (data) => {
 		payload: data,
 	};
 };
+
+/* 
+순서 
+1. action.js  : action 생성 후 return
+2. reducer.js : action 객체를 받아서 전역 데이터를 변형한 뒤 return
+3. store.js   : reducer가 반환한 객체를 전역 store 공간에 저장 후 export
+4. index.js   : store 전역 데이터 객체를 App 컴포넌트에 Provider로 전달
+5. 원하는 컴포넌트 어디에서든 useSelector로 store 데이터 호출 가능 
+*/

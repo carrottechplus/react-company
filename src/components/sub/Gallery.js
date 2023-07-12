@@ -52,8 +52,11 @@ function Gallery() {
 			// data fetching전 컴포넌트가 unmount되면 state에 값을 담지 않으므로 불필요한 메모리 누수가 발생하지 않음.
 			Mounted && setItems(result.data.photos.photo);
 
-			const imgs = frame.current.querySelectorAll('img');
-			console.log('imgDOM의 전체 갯수', imgs.length);
+			const imgs = frame.current?.querySelectorAll('img');
+			// console.log('imgDOM의 전체 갯수', imgs.length);
+
+			//  만약 imgs에 받아지는 값이 없으면 밑에 반복문이 실행 안되도록 return으로 강제종료
+			if (!imgs) return;
 
 			imgs.forEach((img) => {
 				img.onload = () => {

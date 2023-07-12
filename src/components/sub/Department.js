@@ -1,9 +1,10 @@
 import Layout from '../common/Layout';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setMembers } from '../../redux/action';
 
 function Department() {
 	const Members = useSelector((store) => store.memberReducer.members);
+	const dispatch = useDispatch();
 
 	return (
 		<Layout name={'Department'} txt={'Hello-World'}>
@@ -13,6 +14,7 @@ function Department() {
 					const newMembers = [...Members];
 					newMembers[0].name = 'Emma';
 					const newAction = setMembers(newMembers);
+					dispatch(newAction); //action에서 reducer로 보내주는거, dispatch 안하면 화면에 바뀌진않음.
 					console.log(newAction);
 				}}
 			>

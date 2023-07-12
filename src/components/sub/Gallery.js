@@ -15,58 +15,61 @@ function Gallery() {
 	const [Loader, setLoader] = useState(true);
 	const [Index, setIndex] = useState(0);
 
-	const getFlickr = useCallback(async (opt) => {
-		let counter = 0;
-		const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
-		const key = '6c70577e2661042cd0ab587b17f6c944';
-		const num = 50;
-		// const myID = '198484213@N03';
-		const method_interest = 'flickr.interestingness.getList';
-		const method_search = 'flickr.photos.search';
-		const method_user = 'flickr.people.getPhotos';
+	const [Mounted, setMounted] = useState(true);
 
-		let url = '';
+	const getFlickr = useCallback(
+		async (opt) => {
+			let counter = 0;
+			const baseURL = `https://www.flickr.com/services/rest/?format=json&nojsoncallback=1`;
+			const key = '6c70577e2661042cd0ab587b17f6c944';
+			const num = 50;
+			// const myID = '198484213@N03';
+			const method_interest = 'flickr.interestingness.getList';
+			const method_search = 'flickr.photos.search';
+			const method_user = 'flickr.people.getPhotos';
 
-		if (opt.type === 'interest') url = `${baseURL}&api_key=${key}&method=${method_interest}&per_page=${num}`;
-		if (opt.type === 'search')
-			url = `${baseURL}&api_key=${key}&method=${method_search}&per_page=${num}&tags=${opt.tags}`;
-		if (opt.type === 'user')
-			url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
+			let url = '';
 
-		const result = await axios.get(url); //동기화
-		if (result.data.photos.photo.length === 0) {
-			setLoader(false);
-			frame.current.classList.add('on');
-			const btnMine = btnSet.current.children;
-			btnMine[1].classList.add('on');
-			getFlickr({ type: 'user', user: '198484213@N03' });
-			enableEvent.current = true;
-			return alert('결과값이 없습니다.');
-		}
-		setItems(result.data.photos.photo);
-		console.log(result.data);
+			if (opt.type === 'interest') url = `${baseURL}&api_key=${key}&method=${method_interest}&per_page=${num}`;
+			if (opt.type === 'search')
+				url = `${baseURL}&api_key=${key}&method=${method_search}&per_page=${num}&tags=${opt.tags}`;
+			if (opt.type === 'user')
+				url = `${baseURL}&api_key=${key}&method=${method_user}&per_page=${num}&user_id=${opt.user}`;
 
-		const imgs = frame.current.querySelectorAll('img');
-		console.log('imgDOM의 전체 갯수', imgs.length);
+			const result = await axios.get(url); //동기화
+			if (result.data.photos.photo.length === 0) {
+				setLoader(false);
+				frame.current.classList.add('on');
+				const btnMine = btnSet.current.children;
+				btnMine[1].classList.add('on');
+				getFlickr({ type: 'user', user: '198484213@N03' });
+				enableEvent.current = true;
+				return alert('결과값이 없습니다.');
+			}
 
-		imgs.forEach((img) => {
-			img.onload = () => {
-				++counter;
-				// console.log(counter);
+			// 외부 api로 부터 data fetching 시간이 오래 걸리는 경우, 컴포넌트가 unmount시 해당 mount값을 false로 변경처리
+			// mounted값이 true일 때에만 fetching된 data를 state에 담음.
+			// data fetching전 컴포넌트가 unmount되면 state에 값을 담지 않으므로 불필요한 메모리 누수가 발생하지 않음.
+			Mounted && setItems(result.data.photos.photo);
 
-				//검색결과물에서 특정 사용자를 클릭하면 다시 결과값이 하나 적게 리턴되는 문제 (해결필요)
-				//이슈해결 - 특정 사용자 아이디로 갤러리 출력해서 counter갯수가 2가 부족한 이유는
-				//추력될 이미지돔요소중에서 이미 해당사용자의 이미지와 프로필에 이미지소스2개가 캐싱이 완료되었기때문에
-				//실제 생성된 imgDOM의 갯수는 20개이지만 2개소스이미지의 캐싱이 완료되었기 때문에 onload이벤트는 18번만 발생
-				if (counter === imgs.length - 2) {
-					setLoader(false);
+			const imgs = frame.current.querySelectorAll('img');
+			console.log('imgDOM의 전체 갯수', imgs.length);
 
-					frame.current.classList.add('on');
-					enableEvent.current = true;
-				}
-			};
-		});
-	}, []);
+			imgs.forEach((img) => {
+				img.onload = () => {
+					++counter;
+
+					if (counter === imgs.length - 2) {
+						setLoader(false);
+
+						frame.current.classList.add('on');
+						enableEvent.current = true;
+					}
+				};
+			});
+		},
+		[Mounted]
+	);
 
 	// 기존 갤러리 초기화 함수
 	const resetGallery = (e) => {
@@ -119,7 +122,12 @@ function Gallery() {
 		isUser.current = false;
 	};
 
-	useEffect(() => getFlickr({ type: 'user', user: '198484213@N03' }), [getFlickr]); //state값이 아닌 함수가 들어갈 경우 무한 루프
+	useEffect(() => {
+		getFlickr({ type: 'user', user: '198484213@N03' });
+		return () => {
+			setMounted(false);
+		};
+	}, [getFlickr]); //state값이 아닌 함수가 들어갈 경우 무한 루프
 
 	return (
 		<>

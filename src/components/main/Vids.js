@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 function Vids() {
 	const youtube = useSelector((store) => store.youtubeReducer.youtube);
-	console.log(youtube);
 
 	return (
 		<section id='vids' className='myScroll'>

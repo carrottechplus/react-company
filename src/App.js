@@ -32,7 +32,6 @@ function App() {
 	// 메인 처음 마운트시 데이터 fetching후 store에 저장
 	const fetchMembers = useCallback(async () => {
 		const result = await axios.get(`${process.env.PUBLIC_URL}/DB/members.json`);
-		console.log(result.data.members);
 		dispatch(setMembers(result.data.members));
 	}, [dispatch]);
 

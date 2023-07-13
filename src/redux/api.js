@@ -10,8 +10,9 @@ export const fetchYoutube = async () => {
 	const num = 10;
 	const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${list}&key=${key}&maxResults=${num}`;
 
-	// const result = await axios.get(url);
-	// setVids(result.data.items);
-
 	return await axios.get(url);
+};
+
+export const fetchMember = async () => {
+	return await axios.get(`${process.env.PUBLIC_URL}/DB/members.json`);
 };

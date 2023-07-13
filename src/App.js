@@ -30,6 +30,7 @@ function App() {
 
 	useEffect(() => {
 		dispatch({ type: types.Youtube.start });
+		dispatch({ type: types.Member.start });
 	}, [dispatch]);
 
 	return (

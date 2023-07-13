@@ -13,51 +13,7 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-
-  <!-- 리액트가 제어하지 못하는 파일에서 script 연습하기 -->
-
   <script>
-
-    /*
-    Generator 함수
-    - promise (then), async await와 더불어서 ES6에서 새롭게 나온 동기화 문법
-    - wrapping 함수 안쪽에 복수개 함수를 순차적으로 원하는 시점에 동기적으로 호출하면서 여러개의 return값을 반환
-
-    사용순서
-    1. wrapping 함수 생성시 함수명 뒤에 * 추가
-    2. 안쪽에 자식함수 호출문 앞에 yield문 추가
-    3. 해당 wrapping 함수 호출 시 return 값으로 iterable 객체 반환 (반복가능한 객체)
-    4. 반환된 iterable 객체에 .next 메서드를 호출 시 원하는 시점에 동기적으로 함수 호출 가능
-    */
-
-    function test1() {
-      console.log('test1');
-      return 'test1';
-    }
-
-    function test2() {
-      console.log('test2');
-      return 'test2';
-    }
-
-    function test3() {
-      console.log('test3');
-      return 'test3';
-    }
-
-    function* generator() {
-      yield test1();
-      yield test2();
-      yield test3();
-    }
-    const result = generator();
-    console.log(result);
-
-    const a = result.next(); // test1
-    const b = result.next(); // test2
-    const c = result.next(); // test3
-
-    console.log(c)
   </script>
 </body>
 

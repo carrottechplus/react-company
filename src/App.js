@@ -20,9 +20,18 @@ import Youtube from './components/sub/Youtube';
 //scss
 import './scss/style.scss';
 
-// memu 컴포넌트를 app에서 호출한 뒤 토글 객체를 각각 메인, 서브 헤더로 전달해서 토글 메뉴 기능이 동작하도로 수정해보기
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import * as types from './redux/actionType';
+
 function App() {
+	const dispatch = useDispatch();
 	const menu = useRef(null);
+
+	useEffect(() => {
+		dispatch({ type: types.Youtube.start });
+	}, [dispatch]);
+
 	return (
 		<>
 			{/* Switch는 더 먼저나온 라우터 선택 */}

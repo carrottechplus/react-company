@@ -31,6 +31,7 @@ function App() {
 	useEffect(() => {
 		dispatch({ type: types.Youtube.start });
 		dispatch({ type: types.Member.start });
+		dispatch({ type: types.FLICKR.start, opt: { type: 'user', user: '198484213@N03' } });
 	}, [dispatch]);
 
 	return (

@@ -1,4 +1,8 @@
+import { useSelector } from 'react-redux';
+
 function Pics({ Scrolled, Pos }) {
+	const { flickr } = useSelector((store) => store.flickrReducer);
+	// console.log(flickr);
 	const currentPos = Scrolled - Pos;
 	const base = window.innerHeight / 3;
 	const modifiedPos = currentPos + base;
@@ -15,6 +19,17 @@ function Pics({ Scrolled, Pos }) {
 					opacity: `${Scrolled >= Pos - base ? 1 - modifiedPos / 500 : 1}`,
 				}}
 			></article>
+			<ul>
+				{flickr.map((pic, idx) => {
+					if (idx >= 4) return null;
+
+					return (
+						<li key={pic.id}>
+							<img src={`https://live.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}_m.jpg`} alt={pic.title} />
+						</li>
+					);
+				})}
+			</ul>
 		</section>
 	);
 }

@@ -1,5 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
-import { useCallback, useRef } from 'react';
+import { useRef } from 'react';
 
 // common
 import Header from './components/common/Header';
@@ -21,6 +21,7 @@ import Youtube from './components/sub/Youtube';
 import './scss/style.scss';
 
 import { fetchYoutube } from './redux/youtubeSlice';
+import { fetchDepartment } from './redux/departmentSlice';
 //위는 컴포넌트가 마운트한 뒤에여야
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -32,6 +33,7 @@ function App() {
 
 	useEffect(() => {
 		dispatch(fetchYoutube());
+		dispatch(fetchDepartment());
 	}, [dispatch]);
 
 	return (

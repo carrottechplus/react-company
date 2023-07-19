@@ -1,7 +1,7 @@
 import React from 'react'; //리액트 객체를
 import { useEffect, useRef } from 'react';
 
-function Layout({ name, children, txt = 'Default' }) {
+function Layout({ name, children, txt = 'Default', bg }) {
 	const frame = useRef(null);
 	useEffect(() => {
 		// 마운트 됐을때 class="on" 추가 (unmount 됐을때 제거는 꼭 할필요 없다)
@@ -9,7 +9,7 @@ function Layout({ name, children, txt = 'Default' }) {
 	}, []);
 	return (
 		<section className={`content ${name}`} ref={frame}>
-			<figure></figure>
+			<figure style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/img/${bg})` }}></figure>
 
 			<div className='inner'>
 				<h1>{name}</h1>

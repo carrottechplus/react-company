@@ -130,7 +130,7 @@ function Member() {
 	// }, [Val]);
 
 	return (
-		<Layout name={'Member'}>
+		<Layout name={'Member'} bg={'Members.jpg'}>
 			<button
 				type='button'
 				onClick={() => {

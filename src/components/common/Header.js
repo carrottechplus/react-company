@@ -1,11 +1,12 @@
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, NavLink } from 'react-router-dom';
-import { memo, useRef } from 'react';
-// import Menu from './Menu';
+import { memo } from 'react';
+import { toggle } from '../../redux/menuSlice';
+import { useDispatch } from 'react-redux';
 
-function Header({ type, menu }) {
-	// const openMenu = useRef(null);
+function Header({ type }) {
+	const dispatch = useDispatch();
 	const active = 'on';
 	return (
 		// props로 전달되는 type값을 header의 class명으로 지정해서 스타일 분기처리
@@ -46,14 +47,7 @@ function Header({ type, menu }) {
 						</NavLink>
 					</li>
 				</ul>
-				<button
-					type='button'
-					className='menuOpen'
-					onClick={() => {
-						// openMenu.current.toggle();
-						menu.current.toggle();
-					}}
-				>
+				<button type='button' className='menuOpen' onClick={() => dispatchEvent(toggle())}>
 					<FontAwesomeIcon icon={faBars} />
 				</button>
 			</header>

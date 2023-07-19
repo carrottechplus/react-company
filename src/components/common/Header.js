@@ -47,7 +47,7 @@ function Header({ type }) {
 						</NavLink>
 					</li>
 				</ul>
-				<button type='button' className='menuOpen' onClick={() => dispatchEvent(toggle())}>
+				<button type='button' className='menuOpen' onClick={() => dispatch(toggle())}>
 					<FontAwesomeIcon icon={faBars} />
 				</button>
 			</header>

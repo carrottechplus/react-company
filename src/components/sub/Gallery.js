@@ -18,6 +18,9 @@ function Gallery() {
 	const [Loader, setLoader] = useState(true);
 	const [Index, setIndex] = useState(0);
 
+	const counter = useRef(0);
+	const firstLoaded = useRef(true);
+
 	// const fetchFlickr = useCallback(async (opt) => {
 	// 	let counter = 0;
 
@@ -105,9 +108,36 @@ function Gallery() {
 		searchInput.current.value = '';
 		isUser.current = false;
 	};
+
 	useEffect(() => {
-		console.log(Items);
-	}, [Items]);
+		counter.current = 0;
+
+		if (Items.length === 0 && !firstLoaded.current) {
+			setLoader(false);
+			frame.current.classList.add('on');
+			const btnMine = btnSet.current.children;
+			btnMine[1].classList.add('on');
+			dispatch(fetchFlickr({ type: 'user', user: '198484213@N03' }));
+			enableEvent.current = true;
+			return alert('결과값이 없습니다.');
+		}
+		firstLoaded.current = false;
+
+		const imgs = frame.current.querySelectorAll('img');
+
+		imgs.forEach((img) => {
+			img.onload = () => {
+				++counter.current;
+
+				if (counter.current === imgs.length - 2) {
+					setLoader(false);
+
+					frame.current.classList.add('on');
+					enableEvent.current = true;
+				}
+			};
+		});
+	}, [Items, dispatch]);
 
 	return (
 		<>

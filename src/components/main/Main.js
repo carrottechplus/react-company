@@ -7,7 +7,7 @@ import Vids from './Vids';
 import Banner from './Banner';
 import Btns from './Btns';
 
-function Main({ menu }) {
+function Main() {
 	const [Scrolled, setScrolled] = useState(0);
 	// 얘떄매 메인에 들어가는 모든 컴포넌트가 재호출되고 있음.
 
@@ -15,7 +15,7 @@ function Main({ menu }) {
 
 	return (
 		<main>
-			<Header type={'main'} menu={menu} />
+			<Header type={'main'} />
 			{/* 매개체로만 props 값이 쓰이는 상태 */}
 			<Visual />
 			<News />

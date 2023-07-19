@@ -1,5 +1,4 @@
 import { Route, Switch } from 'react-router-dom';
-import { useRef } from 'react';
 
 // common
 import Header from './components/common/Header';
@@ -30,7 +29,6 @@ import { useDispatch } from 'react-redux';
 
 // memu 컴포넌트를 app에서 호출한 뒤 토글 객체를 각각 메인, 서브 헤더로 전달해서 토글 메뉴 기능이 동작하도로 수정해보기
 function App() {
-	const menu = useRef(null);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -43,7 +41,7 @@ function App() {
 		<>
 			{/* Switch는 더 먼저나온 라우터 선택 */}
 			<Switch>
-				<Route exact path='/' render={() => <Main menu={menu} />} />
+				<Route exact path='/' render={() => <Main />} />
 
 				{/* 기본 형태 ( 특정 문자값을 전달해야하는 )
 				<Route path='/'>
@@ -51,7 +49,7 @@ function App() {
 				</Route>
 				 */}
 
-				<Route path='/' render={() => <Header type={'sub'} menu={menu} />} />
+				<Route path='/' render={() => <Header type={'sub'} />} />
 			</Switch>
 
 			{/* 기본 형태
@@ -69,7 +67,7 @@ function App() {
 
 			<Footer />
 
-			<Menu ref={menu} />
+			<Menu />
 		</>
 	);
 }

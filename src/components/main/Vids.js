@@ -1,5 +1,5 @@
 import { memo, useRef } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper';
 import 'swiper/css';
@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { useYoutubeQuery } from '../../hooks/useYoutubeQuery';
 
 function BtnRolling() {
 	const swiper = useSwiper();
@@ -38,8 +39,10 @@ function BtnRolling() {
 }
 
 function Vids() {
-	const Vids = useSelector((store) => store.youtube.data);
-	console.log(Vids);
+	// const Vids = useSelector((store) => store.youtube.data);
+
+	const { data: Vids, isSuccess } = useYoutubeQuery();
+
 	return (
 		<section id='vids' className='myScroll'>
 			<Swiper
@@ -63,26 +66,27 @@ function Vids() {
 				}}
 			>
 				<BtnRolling />
-				{Vids.map((vid, idx) => {
-					if (idx >= 10) return null;
-					return (
-						<SwiperSlide key={idx}>
-							<div className='inner'>
-								<div className='pic'>
-									<img src={vid.snippet.thumbnails.standard.url} alt={vid.snippet.title} />
-									<h2 className='title'>
-										{vid.snippet.title.length >= 30 ? vid.snippet.title.substr(0, 30) + '...' : vid.snippet.title}
-									</h2>
-									<p className='desc'>
-										{vid.snippet.description.length >= 120
-											? vid.snippet.description.substr(0, 120) + '...'
-											: vid.snippet.description}
-									</p>
+				{isSuccess &&
+					Vids.map((vid, idx) => {
+						if (idx >= 10) return null;
+						return (
+							<SwiperSlide key={idx}>
+								<div className='inner'>
+									<div className='pic'>
+										<img src={vid.snippet.thumbnails.standard.url} alt={vid.snippet.title} />
+										<h2 className='title'>
+											{vid.snippet.title.length >= 30 ? vid.snippet.title.substr(0, 30) + '...' : vid.snippet.title}
+										</h2>
+										<p className='desc'>
+											{vid.snippet.description.length >= 120
+												? vid.snippet.description.substr(0, 120) + '...'
+												: vid.snippet.description}
+										</p>
+									</div>
 								</div>
-							</div>
-						</SwiperSlide>
-					);
-				})}
+							</SwiperSlide>
+						);
+					})}
 			</Swiper>
 		</section>
 	);

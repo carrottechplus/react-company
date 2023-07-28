@@ -1,12 +1,10 @@
-import { useSelector } from 'react-redux';
+import { useGalleryQuery } from '../../hooks/useGalleryQuery';
 
 function Pics({ Scrolled, Pos }) {
-	const Pics = useSelector((store) => store.flickr.data);
-
+	const { data: Pics, isSuccess } = useGalleryQuery({ type: 'user', user: '198484213@N03' });
 	const currentPos = Scrolled - Pos;
-	const base = window.innerHeight / 3;
-	const modifiedPos = currentPos + base;
-	// console.log(Scrolled); 이건 스크롤될 때 마다 계속 재호출되는데 그게맞음. 왜냐하면 강제로 줄여버리면..모션이 끊길것..
+	// const base = window.innerHeight / 3;
+	// const modifiedPos = currentPos + base;
 	return (
 		<section id='pics' className='myScroll'>
 			<h1 style={{ transform: `translateX(${currentPos}px)` }}>FLICKR</h1>
@@ -21,14 +19,18 @@ function Pics({ Scrolled, Pos }) {
 			>
 				</article> */}
 			<div className='picWrap'>
-				{Pics.map((pic, idx) => {
-					if (idx >= 4) return null;
-					return (
-						<article key={idx}>
-							<img src={`https://live.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}_m.jpg`} alt={pic.title} />
-						</article>
-					);
-				})}
+				{isSuccess &&
+					Pics.map((pic, idx) => {
+						if (idx >= 4) return null;
+						return (
+							<article key={idx}>
+								<img
+									src={`https://live.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}_m.jpg`}
+									alt={pic.title}
+								/>
+							</article>
+						);
+					})}
 			</div>
 		</section>
 	);

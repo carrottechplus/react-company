@@ -20,7 +20,6 @@ import Youtube from './components/sub/Youtube';
 import './scss/style.scss';
 
 import { fetchDepartment } from './redux/departmentSlice';
-import { fetchFlickr } from './redux/flickrSlice';
 
 //위는 컴포넌트가 마운트한 뒤에여야
 import { useEffect } from 'react';
@@ -35,7 +34,6 @@ function App() {
 
 	useEffect(() => {
 		dispatch(fetchDepartment());
-		dispatch(fetchFlickr({ type: 'user', user: '198484213@N03' }));
 	}, [dispatch]);
 
 	return (

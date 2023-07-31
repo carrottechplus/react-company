@@ -2,14 +2,14 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, NavLink } from 'react-router-dom';
 import { memo } from 'react';
-import { toggle } from '../../redux/menuSlice';
-import { useDispatch } from 'react-redux';
+import { useGlobalData } from '../../hooks/useGlobalContext';
 
 function Header({ type }) {
-	const dispatch = useDispatch();
+	const { MenuOpen, setMenuOpen } = useGlobalData();
+	// console.log(data); //전역스테이트값 잘 있는지 확인해보자
+
 	const active = 'on';
 	return (
-		// props로 전달되는 type값을 header의 class명으로 지정해서 스타일 분기처리
 		<>
 			<header className={type}>
 				<h1>
@@ -47,11 +47,10 @@ function Header({ type }) {
 						</NavLink>
 					</li>
 				</ul>
-				<button type='button' className='menuOpen' onClick={() => dispatch(toggle())}>
+				<button type='button' className='menuOpen' onClick={() => setMenuOpen(!MenuOpen)}>
 					<FontAwesomeIcon icon={faBars} />
 				</button>
 			</header>
-			{/* <Menu ref={openMenu} /> */}
 		</>
 	);
 }

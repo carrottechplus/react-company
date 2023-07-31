@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import Anime from '../../asset/anime';
+import { useThrottle } from '../../hooks/useThrottle';
 
 function Btns({ setScrolled, setPos }) {
 	const btnRef = useRef(null);
@@ -7,7 +8,6 @@ function Btns({ setScrolled, setPos }) {
 
 	const [Num, setNum] = useState(0);
 
-	// useCallback으로 memoization 처리, 임시적으로 setPos부분은 풀리게
 	const getPos = useCallback(() => {
 		pos.current = [];
 		const secs = btnRef.current.parentElement.querySelectorAll('.myScroll');
@@ -18,12 +18,11 @@ function Btns({ setScrolled, setPos }) {
 	}, [setPos]);
 
 	const activation = useCallback(() => {
-		//스크롤
 		const base = -window.innerHeight / 3;
 		const scroll = window.scrollY;
 		const btns = btnRef.current.children; // li들
 		const boxs = btnRef.current.parentElement.querySelectorAll('.myScroll');
-		setScrolled(scroll);
+		// setScrolled(scroll); 다른 컴포넌트에서 불러오기 떄문에 throttling 되면 안됨 아래 changeScroll로 빼기
 
 		pos.current.forEach((pos, idx) => {
 			if (scroll >= pos + base) {
@@ -33,25 +32,35 @@ function Btns({ setScrolled, setPos }) {
 				boxs[idx].classList.add('on');
 			}
 		});
+	}, []);
+
+	const changeScroll = useCallback(() => {
+		const scroll = window.scrollY;
+		setScrolled(scroll);
 	}, [setScrolled]);
+
+	const getPos2 = useThrottle(getPos);
+	const activation2 = useThrottle(activation);
 
 	useEffect(() => {
 		getPos();
-		window.addEventListener('resize', getPos);
-		window.addEventListener('scroll', activation);
+		window.addEventListener('resize', getPos2);
+		window.addEventListener('scroll', activation2);
+		window.addEventListener('scroll', changeScroll);
 
 		window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
 		return () => {
-			window.removeEventListener('resize', getPos);
-			window.removeEventListener('scroll', activation);
+			window.removeEventListener('resize', getPos2);
+			window.removeEventListener('scroll', activation2);
+			window.removeEventListener('scroll', changeScroll);
+
 			window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 		};
-	}, [getPos, activation]);
+	}, [getPos, getPos2, activation2, changeScroll]);
 
 	return (
 		<ul className='btnNav' ref={btnRef}>
-			{/* 현재 새로 위치값이 담겨있는 배열의 갯구로 빈배열을 동적으로 생성하고 버튼을 반복 처리. */}
 			{Array(Num)
 				.fill()
 				.map((_, idx) => {

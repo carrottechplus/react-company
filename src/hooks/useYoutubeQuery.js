@@ -1,4 +1,4 @@
-import { UseQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 //youtube fetching 함수 만들기,

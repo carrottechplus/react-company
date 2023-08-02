@@ -93,7 +93,7 @@ function Gallery() {
 				if (counter.current === imgs.length - 2) {
 					setLoader(false);
 
-					frame.current.classList.add('on');
+					frame?.current.classList.add('on');
 					enableEvent.current = true;
 				}
 			};

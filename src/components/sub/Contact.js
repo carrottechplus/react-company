@@ -1,6 +1,7 @@
 import Layout from '../common/Layout';
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import emailjs from '@emailjs/browser';
+import { useThrottle } from '../../hooks/useThrottle';
 
 function Contact() {
 	const container = useRef(null);
@@ -39,17 +40,6 @@ function Contact() {
 		},
 	]);
 
-	// const option = { center: info.current[Index].latlng, level: 3 };
-
-	//아래 5개 변수값들은 useEffect구문에서 인스턴스 생성할때만 필요한 정보값에 불과하므로 미리 읽히도록 useEffect바깥에 배치
-	// const imgSrc = info.current[Index].imgSrc;
-	// const imgSize = info.current[Index].imgSize;
-	// const imgPos = info.current[Index].imgPos;
-	// const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize, imgPos);
-
-	// const markerImage = new kakao.maps.MarkerImage(info.current[Index].imgSrc, info.current[Index].imgSize, info.current[Index].imgPos);
-
-	// marker 정보값을 메모이제이션 할 때, useRef는 안되고 useMemo는 되는 이유
 	const marker = useMemo(() => {
 		return new kakao.maps.Marker({
 			position: info.current[Index].latlng,
@@ -79,6 +69,12 @@ function Contact() {
 		);
 	};
 
+	const setCenter = useCallback(() => {
+		Location?.setCenter(info.current[Index].latlng);
+	}, [Index, Location]);
+
+	const setCenter2 = useThrottle(setCenter);
+
 	useEffect(() => {
 		container.current.innerHTML = '';
 		const mapInstance = new kakao.maps.Map(container.current, { center: info.current[Index].latlng, level: 3 });
@@ -89,17 +85,14 @@ function Contact() {
 		setLocation(mapInstance);
 
 		mapInstance.setZoomable(false);
-
-		const setCenter = () => {
-			mapInstance.panTo(info.current[Index].latlng);
-		};
-
-		window.addEventListener('resize', setCenter);
-		return () => {
-			//unmount 되었을때
-			window.removeEventListener('resize', setCenter);
-		};
 	}, [Index, kakao, marker]);
+
+	useEffect(() => {
+		window.addEventListener('resize', setCenter2);
+		return () => {
+			window.removeEventListener('resize', setCenter2);
+		};
+	}, [setCenter2]);
 
 	useEffect(() => {
 		Traffic

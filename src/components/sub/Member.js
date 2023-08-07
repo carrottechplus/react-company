@@ -57,7 +57,7 @@ function Member() {
 
 		// check가 반환하는 인증 메세지가 있으면 해당 메세지를 화면에 출력하고 전송 중지
 		// 그렇지않으면 인증 성공
-		Mounted && setErr(check(Val));
+		setErr(check(Val));
 		setSubmit(true);
 	};
 

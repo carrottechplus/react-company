@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Layout from '../common/Layout';
 import { useHistory } from 'react-router-dom';
+import { useDebounce } from '../../hooks/useDebounce';
 
 function Member() {
 	const selectEl = useRef(null);
@@ -24,17 +25,12 @@ function Member() {
 	const [Err, setErr] = useState({});
 	const [Submit, setSubmit] = useState(false);
 
+	const DebouncedVal = useDebounce(Val);
+
 	const handleChange = (e) => {
 		//현재 입력하고 있는 input 요소의 name,vale값을 비구조할당으로 뽑아서 출력
 		const { name, value } = e.target;
-		// console.log(name, value);
-
 		// 기존 초기의 Val State 값을 deep copy하여, 현재 입력하고 있는 항목의 name값과 value값으로 기존 State를 덮어쓰기해서 변경(불변성 유지)
-		setVal({ ...Val, [name]: value }); //변경함수 호출해서
-	};
-
-	const handleRadio = (e) => {
-		const { name, value } = e.target;
 		setVal({ ...Val, [name]: value });
 	};
 
@@ -49,18 +45,17 @@ function Member() {
 		setVal({ ...Val, [name]: checkArr });
 	};
 
-	const handleSelect = (e) => {
-		const { name, value } = e.target;
-		setVal({ ...Val, [name]: value });
-	};
+	const showErr = useCallback(() => {
+		console.log('showErr'); // debounce 처리 안하면 글자 하나하나 입력할 떄마다 함수호출됨
+
+		setErr(check(DebouncedVal));
+	}, [DebouncedVal]);
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		// console.log('현재 state 값', Val);
 
 		// check가 반환하는 인증 메세지가 있으면 해당 메세지를 화면에 출력하고 전송 중지
 		// 그렇지않으면 인증 성공
-		// console.log(check(Val));
 		setErr(check(Val));
 		setSubmit(true);
 	};
@@ -101,33 +96,33 @@ function Member() {
 		return errs;
 	};
 
-	const resetForm = useCallback(() => {
-		const select = selectEl.current.options[0];
-		const checks = checkGroup.current.querySelectorAll('input');
-		const radios = radioGroup.current.querySelectorAll('input');
-		select.selected = true;
-		checks.forEach((el) => (el.checked = false));
-		radios.forEach((el) => (el.checked = false));
-		setVal(initVal);
-	}, []);
+	// submit 시 인증 통과하면 메인 페이지로 이동하도록 수정하여 불필요해짐.
+	// const resetForm = useCallback(() => {
+	// 	const select = selectEl.current.options[0];
+	// 	const checks = checkGroup.current.querySelectorAll('input');
+	// 	const radios = radioGroup.current.querySelectorAll('input');
+	// 	select.selected = true;
+	// 	checks.forEach((el) => (el.checked = false));
+	// 	radios.forEach((el) => (el.checked = false));
+	// 	setVal(initVal);
+	// }, []);
 
 	useEffect(() => {
 		// 에러 스테이트 안에 값이 없으면 통과 있으면 실패. 객체의 key값을 반복돌아서 확인
-
 		// 객체의 키 값을 배열로 반환한 다음 해당 배열의 갯수를 저장,
 		// len 값이 0 이면 Err 객체에 에러 메세지가 없으니 인증 통과 처리
 
 		const len = Object.keys(Err).length;
 		if (len === 0 && Submit) {
 			alert('모든 인증을 통과했습니다.');
-			// history.push('/');
-			resetForm();
+			history.push('/');
+			// resetForm();
 		}
-	}, [Err, Submit, resetForm]);
+	}, [Err, Submit, history]);
 
-	// useEffect(() => {
-	// 	console.log(Val);
-	// }, [Val]);
+	useEffect(() => {
+		showErr();
+	}, [DebouncedVal, showErr]);
 
 	return (
 		<Layout name={'Member'} bg={'Members.jpg'}>
@@ -216,9 +211,9 @@ function Member() {
 								<th scope='row'>Gender</th>
 								<td>
 									<label htmlFor='male'>Male</label>
-									<input type='radio' name='gender' id='male' onChange={handleRadio} />
+									<input type='radio' name='gender' id='male' onChange={handleChange} />
 									<label htmlFor='female'>Female</label>
-									<input type='radio' name='gender' id='female' onChange={handleRadio} />
+									<input type='radio' name='gender' id='female' onChange={handleChange} />
 									<br />
 									{Err.gender && <p>{Err.gender}</p>}
 								</td>
@@ -246,7 +241,7 @@ function Member() {
 									<label htmlFor='edu'>Edu</label>
 								</th>
 								<td>
-									<select name='edu' id='edu' onChange={handleSelect}>
+									<select name='edu' id='edu' onChange={handleChange}>
 										<option value=''>최종학력을 선택하세요</option>
 										<option value='elementary-school'>초등학교 졸업</option>
 										<option value='middle-school'>중학교 졸업</option>
@@ -276,7 +271,6 @@ function Member() {
 							</tr>
 						</thead>
 
-						{/* form buttons */}
 						<tbody>
 							<tr>
 								<th colSpan='2'>
